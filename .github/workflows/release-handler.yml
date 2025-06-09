@@ -1,0 +1,38 @@
+name: Handle Release
+
+on:
+  workflow_run:
+    workflows: ["Mod Release Build", "Mod Stable Build"]
+    types:
+      - completed
+    branches:
+      - develop
+
+jobs:
+  handle-release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    steps:
+      - name: Download artifacts from private repo
+        uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: ${{ github.event.workflow_run.workflow_id }}
+          run_id: ${{ github.event.workflow_run.id }}
+          path: artifacts
+
+      - name: Create Release
+        id: create_release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: artifacts/*.jar
+          generate_release_notes: true
+          tag_name: ${{ github.event.workflow_run.head_branch == 'develop' && 'stable' || github.event.workflow_run.head_branch }}
+          name: ${{ github.event.workflow_run.head_branch == 'develop' && 'Stable Build' || 'Release Build' }}
+          body: |
+            Build from private repository: ${{ github.event.workflow_run.repository.full_name }}
+            Commit: ${{ github.event.workflow_run.head_sha }}
+            Branch: ${{ github.event.workflow_run.head_branch }}
+            Workflow: ${{ github.event.workflow_run.name }} 

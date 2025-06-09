@@ -1,0 +1,5 @@
+theme: jekyll-theme-minimal
+title: HackCraft2
+description: Minecraftの新しいModdingプラットフォーム
+baseurl: "/hackCraft2"
+url: "https://your-username.github.io" 

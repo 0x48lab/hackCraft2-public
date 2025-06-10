@@ -1,19 +1,61 @@
 {
-    "latest": {
+    "stable": {
         "name": "v1.21.4-R50",
         "published_at": "2025-06-10T13:18:36Z",
-        "body": "タグ付きリリース: v1.21.4-R50",
+        "paper_version": "1.21.4",
+        "commit": {
+            "hash": "a1b2c3d4e5f6g7h8i9j0",
+            "message": "feat: 安定版リリース v1.21.4-R50",
+            "author": "masafumit",
+            "date": "2025-06-10T13:18:36Z"
+        },
+        "body": "安定版リリース: v1.21.4-R50\n\n対応Paperバージョン: 1.21.4\n\n- バグ修正と安定性の向上\n- パフォーマンスの最適化\n- 新機能の追加",
         "assets": [
             {
-                "name": "hackcraft2-1.21.4-R50.jar",
-                "size": 9,
-                "browser_download_url": "downloads/releases/hackcraft2-1.21.4-R50.jar"
-            },
-            {
-                "name": "latest.jar",
-                "size": 9,
-                "browser_download_url": "downloads/latest/latest.jar"
+                "name": "hackCraft2-server-v1.21.4-R50.jar",
+                "size": 10485760,
+                "browser_download_url": "downloads/releases/hackCraft2-server-v1.21.4-R50.jar"
             }
         ]
-    }
+    },
+    "releases": [
+        {
+            "name": "v1.21.4-R50",
+            "published_at": "2025-06-10T13:18:36Z",
+            "paper_version": "1.21.4",
+            "commit": {
+                "hash": "a1b2c3d4e5f6g7h8i9j0",
+                "message": "feat: リリース v1.21.4-R50",
+                "author": "masafumit",
+                "date": "2025-06-10T13:18:36Z"
+            },
+            "body": "タグ付きリリース: v1.21.4-R50\n\n対応Paperバージョン: 1.21.4\n\n- バグ修正と安定性の向上\n- パフォーマンスの最適化\n- 新機能の追加",
+            "assets": [
+                {
+                    "name": "hackCraft2-server-v1.21.4-R50.jar",
+                    "size": 10485760,
+                    "browser_download_url": "downloads/releases/hackCraft2-server-v1.21.4-R50.jar"
+                }
+            ]
+        },
+        {
+            "name": "v1.21.4-R49",
+            "published_at": "2025-06-03T10:15:22Z",
+            "paper_version": "1.21.4",
+            "commit": {
+                "hash": "b2c3d4e5f6g7h8i9j0k1",
+                "message": "fix: バグ修正と軽微な改善",
+                "author": "masafumit",
+                "date": "2025-06-03T10:15:22Z"
+            },
+            "body": "タグ付きリリース: v1.21.4-R49\n\n対応Paperバージョン: 1.21.4\n\n- バグ修正\n- 軽微な改善",
+            "assets": [
+                {
+                    "name": "hackCraft2-server-v1.21.4-R49.jar",
+                    "size": 10485760,
+                    "browser_download_url": "downloads/releases/hackCraft2-server-v1.21.4-R49.jar"
+                }
+            ]
+        }
+    ]
 }

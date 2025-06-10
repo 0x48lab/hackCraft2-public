@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HackCraft2 - Minecraft Modding Platform</title>
+    <title>hackCraft2 - Minecraft Modding Platform</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
@@ -30,7 +30,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="#">HackCraft2</a>
+            <a class="navbar-brand" href="#">hackCraft2</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -52,7 +52,7 @@
 
     <div class="hero">
         <div class="container text-center">
-            <h1 class="display-4">HackCraft2</h1>
+            <h1 class="display-4">hackCraft2</h1>
             <p class="lead">Minecraftの新しいModdingプラットフォーム</p>
         </div>
     </div>
@@ -92,12 +92,27 @@
             <div class="container">
                 <h2 class="text-center mb-4">ダウンロード</h2>
                 <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="card">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
                             <div class="card-body">
-                                <h5 class="card-title">最新リリース</h5>
-                                <p class="card-text">最新の安定版ビルドをダウンロードできます。</p>
-                                <div id="latest-release">
+                                <h5 class="card-title">
+                                    <i class="bi bi-stars"></i> 安定版 (Stable)
+                                </h5>
+                                <p class="card-text">最新の安定版ビルドをダウンロードできます。最も安定した動作が期待できるバージョンです。</p>
+                                <div id="stable-release">
+                                    <p class="text-muted">リリース情報を読み込み中...</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-tags"></i> リリース版
+                                </h5>
+                                <p class="card-text">タグ付きのリリースビルドをダウンロードできます。特定のバージョンが必要な場合にご利用ください。</p>
+                                <div id="tagged-releases">
                                     <p class="text-muted">リリース情報を読み込み中...</p>
                                 </div>
                             </div>
@@ -110,21 +125,91 @@
         <section id="getting-started" class="mb-5">
             <h2 class="text-center mb-4">始め方</h2>
             <div class="row">
-                <div class="col-md-6">
-                    <h3>インストール方法</h3>
-                    <ol>
-                        <li>最新のリリースをダウンロード</li>
-                        <li>Minecraftのmodsフォルダにjarファイルを配置</li>
-                        <li>Minecraftを起動</li>
-                    </ol>
-                </div>
-                <div class="col-md-6">
-                    <h3>開発環境のセットアップ</h3>
-                    <ol>
-                        <li>リポジトリをクローン</li>
-                        <li>Gradleを使用してビルド</li>
-                        <li>開発用の環境をセットアップ</li>
-                    </ol>
+                <div class="col-md-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <h3 class="card-title">
+                                <i class="bi bi-server"></i> サーバーセットアップ手順
+                            </h3>
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> この手順では、Paperサーバーを使用することを推奨しています。
+                                Paperは高性能で安定したサーバーソフトウェアです。
+                            </div>
+                            <div class="steps">
+                                <h4 class="mt-4">1. Paperサーバーのインストール</h4>
+                                <ol>
+                                    <li>
+                                        <a href="https://papermc.io/downloads" target="_blank">Paperのダウンロードページ</a>から最新版のPaperをダウンロード
+                                        <ul>
+                                            <li>推奨バージョン: Minecraft 1.24.4(2025年6月10日現在)</li>
+                                            <li>ダウンロードしたjarファイルを任意のディレクトリに配置</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        サーバーの初期設定
+                                        <ul>
+                                            <li>jarファイルをダブルクリックして実行（初回起動）</li>
+                                            <li><code>eula.txt</code>を開き、<code>eula=true</code>に変更</li>
+                                            <li><code>server.properties</code>でサーバー設定を調整（必要に応じて）</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+
+                                <h4 class="mt-4">2. hackCraft2プラグインのインストール</h4>
+                                <ol>
+                                    <li>
+                                        サーバーの<code>plugins</code>フォルダを作成
+                                        <ul>
+                                            <li>Paperサーバーのルートディレクトリに<code>plugins</code>フォルダを作成</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        hackCraft2プラグインの配置
+                                        <ul>
+                                            <li>上記の「ダウンロード」セクションから安定版またはリリース版をダウンロード</li>
+                                            <li>ダウンロードしたjarファイルを<code>plugins</code>フォルダに配置</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+
+                                <h4 class="mt-4">3. サーバーの起動</h4>
+                                <ol>
+                                    <li>
+                                        サーバーの起動
+                                        <ul>
+                                            <li>Paperのjarファイルを再度実行してサーバーを起動</li>
+                                            <li>初回起動時はプラグインの初期化に時間がかかる場合があります</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        動作確認
+                                        <ul>
+                                            <li>サーバーが正常に起動したら、Minecraftクライアントから接続</li>
+                                            <li>サーバーコンソールで<code>/plugins</code>コマンドを実行し、hackCraft2が正常に読み込まれていることを確認</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+
+                                <div class="alert alert-warning mt-4">
+                                    <h5><i class="bi bi-exclamation-triangle"></i> 注意事項</h5>
+                                    <ul class="mb-0">
+                                        <li>サーバーのメモリ割り当ては最低4GB以上を推奨</li>
+                                        <li>初回起動時は<code>server.properties</code>の<code>online-mode</code>を<code>false</code>に設定することを推奨（開発時）</li>
+                                        <li>本番環境では適切なセキュリティ設定を行ってください</li>
+                                    </ul>
+                                </div>
+
+                                <div class="alert alert-info mt-4">
+                                    <h5><i class="bi bi-lightbulb"></i> トラブルシューティング</h5>
+                                    <ul class="mb-0">
+                                        <li>サーバーが起動しない場合は、Javaのバージョンが17以上であることを確認</li>
+                                        <li>プラグインが読み込まれない場合は、jarファイルが正しい<code>plugins</code>フォルダに配置されているか確認</li>
+                                        <li>エラーメッセージが表示される場合は、サーバーのログ（<code>logs/latest.log</code>）を確認</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -132,13 +217,13 @@
 
     <footer class="bg-dark text-light py-4">
         <div class="container text-center">
-            <p>&copy; 2024 HackCraft2. All rights reserved.</p>
+            <p>&copy; 2024 hackCraft2. All rights reserved.</p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // 公開用のリリース情報を取得
+        // 安定版のリリース情報を取得
         fetch('releases.json')
             .then(response => {
                 if (!response.ok) {
@@ -147,19 +232,19 @@
                 return response.json();
             })
             .then(data => {
-                const releaseDiv = document.getElementById('latest-release');
-                if (data.latest && data.latest.assets && data.latest.assets.length > 0) {
-                    const asset = data.latest.assets[0];
+                const stableDiv = document.getElementById('stable-release');
+                if (data.stable && data.stable.assets && data.stable.assets.length > 0) {
+                    const asset = data.stable.assets[0];
                     const downloadUrl = asset.browser_download_url;
                     const fileName = asset.name;
                     const fileSize = (asset.size / (1024 * 1024)).toFixed(2); // MB単位に変換
 
-                    releaseDiv.innerHTML = `
+                    stableDiv.innerHTML = `
                         <div class="release-info">
-                            <h6 class="mb-2">${data.latest.name}</h6>
-                            <p class="text-muted mb-2">リリース日: ${new Date(data.latest.published_at).toLocaleDateString('ja-JP')}</p>
+                            <h6 class="mb-2">${data.stable.name || 'Stable Release'}</h6>
+                            <p class="text-muted mb-2">最終更新: ${new Date(data.stable.published_at).toLocaleDateString('ja-JP')}</p>
                             <div class="mb-3">
-                                <p class="mb-1">${data.latest.body.replace(/\n/g, '<br>')}</p>
+                                <p class="mb-1">${data.stable.body ? data.stable.body.replace(/\n/g, '<br>') : '安定版リリース'}</p>
                             </div>
                             <div class="d-grid gap-2">
                                 <a href="${downloadUrl}" class="btn btn-primary">
@@ -169,12 +254,57 @@
                         </div>
                     `;
                 } else {
-                    releaseDiv.innerHTML = '<p class="text-warning">現在、ダウンロード可能なファイルはありません。</p>';
+                    stableDiv.innerHTML = '<p class="text-warning">現在、安定版のダウンロードは利用できません。</p>';
+                }
+
+                // タグ付きリリースの表示
+                const taggedDiv = document.getElementById('tagged-releases');
+                if (data.releases && data.releases.length > 0) {
+                    let releasesHtml = '<div class="list-group">';
+                    data.releases.slice(0, 5).forEach(release => {
+                        const asset = release.assets[0];
+                        const downloadUrl = asset.browser_download_url;
+                        const fileName = asset.name;
+                        const fileSize = (asset.size / (1024 * 1024)).toFixed(2);
+
+                        releasesHtml += `
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">${release.name}</h6>
+                                    <small class="text-muted">${new Date(release.published_at).toLocaleDateString('ja-JP')}</small>
+                                </div>
+                                <p class="mb-1 small">${release.body ? release.body.split('\n')[0] : ''}</p>
+                                <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-download"></i> ダウンロード (${fileSize}MB)
+                                </a>
+                            </div>
+                        `;
+                    });
+                    releasesHtml += '</div>';
+                    if (data.releases.length > 5) {
+                        releasesHtml += `
+                            <div class="text-center mt-3">
+                                <a href="https://github.com/masafumit/hackCraft2-public/releases" class="btn btn-link" target="_blank">
+                                    すべてのリリースを見る <i class="bi bi-box-arrow-up-right"></i>
+                                </a>
+                            </div>
+                        `;
+                    }
+                    taggedDiv.innerHTML = releasesHtml;
+                } else {
+                    taggedDiv.innerHTML = '<p class="text-warning">現在、リリース版のダウンロードは利用できません。</p>';
                 }
             })
             .catch(error => {
-                console.error('Error fetching release:', error);
-                document.getElementById('latest-release').innerHTML = `
+                console.error('Error fetching releases:', error);
+                document.getElementById('stable-release').innerHTML = `
+                    <div class="alert alert-info" role="alert">
+                        <i class="bi bi-info-circle"></i> 現在、リリース情報を表示できません。
+                        <br>
+                        <small>しばらく経ってから再度お試しください。</small>
+                    </div>
+                `;
+                document.getElementById('tagged-releases').innerHTML = `
                     <div class="alert alert-info" role="alert">
                         <i class="bi bi-info-circle"></i> 現在、リリース情報を表示できません。
                         <br>

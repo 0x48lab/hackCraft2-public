@@ -1,14 +1,28 @@
 {
-    "latest": {
-        "name": "",
+    "stable": {
+        "name": "Stable Release",
         "published_at": "",
-        "body": "",
+        "body": "最新の安定版リリースです。",
         "assets": [
             {
-                "name": "",
+                "name": "hackcraft2-stable.jar",
                 "size": 0,
-                "browser_download_url": "downloads/latest/hackcraft2-stable.jar"
+                "browser_download_url": "downloads/stable/hackcraft2-stable.jar"
             }
         ]
-    }
+    },
+    "releases": [
+        {
+            "name": "v1.0.0",
+            "published_at": "",
+            "body": "初回リリース",
+            "assets": [
+                {
+                    "name": "hackcraft2-1.0.0.jar",
+                    "size": 0,
+                    "browser_download_url": "downloads/releases/hackcraft2-1.0.0.jar"
+                }
+            ]
+        }
+    ]
 } 

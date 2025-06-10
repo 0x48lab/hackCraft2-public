@@ -1,13 +1,13 @@
 {
     "latest": {
-        "name": "v1.21.4-R50-a2",
-        "published_at": "2025-06-10T13:51:15Z",
-        "body": "タグ付きリリース: v1.21.4-R50-a2",
+        "name": "develop",
+        "published_at": "2025-06-10T14:05:02Z",
+        "body": "タグ付きリリース: develop",
         "assets": [
             {
-                "name": "hackcraft2-1.21.4-R50-a2.jar",
+                "name": "hackcraft2-develop.jar",
                 "size": 9,
-                "browser_download_url": "downloads/releases/hackcraft2-1.21.4-R50-a2.jar"
+                "browser_download_url": "downloads/releases/hackcraft2-develop.jar"
             },
             {
                 "name": "latest.jar",

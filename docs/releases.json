@@ -1,13 +1,18 @@
 {
     "stable": {
-        "name": "Stable Release",
-        "published_at": "",
-        "body": "最新の安定版リリースです。",
+        "name": "Stable Build 12",
+        "published_at": "2025-06-10T05:31:45Z",
+        "body": "Stable build from refs/heads/develop\n- Commit: 15ce026ef78bfd98836b06dcb0fbd79810e318a3\n- Build Number: 12",
         "assets": [
             {
-                "name": "hackcraft2-stable.jar",
-                "size": 0,
-                "browser_download_url": "downloads/stable/hackcraft2-stable.jar"
+                "name": "hackcraft2-stable-20250610_053144.jar",
+                "size": 182299218,
+                "browser_download_url": "downloads/stable/hackcraft2-stable-20250610_053144.jar"
+            },
+            {
+                "name": "latest.jar",
+                "size": 182299218,
+                "browser_download_url": "downloads/stable/latest.jar"
             }
         ]
     },
@@ -25,4 +30,4 @@
             ]
         }
     ]
-} 
+}

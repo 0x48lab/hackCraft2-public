@@ -1,14 +1,14 @@
 {
     "release": {
-        "name": "v1.21.4-R50",
-        "published_at": "2025-06-11T15:51:28Z",
+        "name": "v1.21.5-R51",
+        "published_at": "2025-06-11T16:20:17Z",
         "paper_version": "",
-        "body": "タグ付きリリース: v1.21.4-R50\n- Paper Version: ",
+        "body": "タグ付きリリース: v1.21.5-R51\n- Paper Version: ",
         "assets": [
             {
-                "name": "hackcraft2-1.21.4-R50.jar",
+                "name": "hackcraft2-1.21.5-R51.jar",
                 "size": 9,
-                "browser_download_url": "downloads/releases/hackcraft2-1.21.4-R50.jar"
+                "browser_download_url": "downloads/releases/hackcraft2-1.21.5-R51.jar"
             }
         ]
     }

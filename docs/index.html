@@ -234,39 +234,53 @@
             .then(data => {
                 const stableDiv = document.getElementById('stable-release');
                 if (data.stable && data.stable.assets && data.stable.assets.length > 0) {
-                    const asset = data.stable.assets[0];
-                    const downloadUrl = asset.browser_download_url;
-                    const fileName = asset.name;
-                    const fileSize = (asset.size / (1024 * 1024)).toFixed(2); // MB単位に変換
+                    let stableHtml = '<div class="list-group">';
+                    // 安定版の履歴を表示（最新5件）
+                    const stableReleases = data.stable_releases || [];
+                    stableReleases.slice(0, 5).forEach(release => {
+                        const asset = release.assets[0];
+                        const downloadUrl = asset.browser_download_url;
+                        const fileName = asset.name;
+                        const fileSize = (asset.size / (1024 * 1024)).toFixed(2);
 
-                    stableDiv.innerHTML = `
-                        <div class="release-info">
-                            <h6 class="mb-2">${data.stable.name || 'Stable Release'}</h6>
-                            <p class="text-muted mb-2">最終更新: ${new Date(data.stable.published_at).toLocaleDateString('ja-JP')}</p>
-                            <div class="mb-3">
-                                <p class="mb-1">${data.stable.body ? data.stable.body.replace(/\n/g, '<br>') : '安定版リリース'}</p>
-                                ${data.stable.commit ? `
+                        stableHtml += `
+                            <div class="list-group-item">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">${release.name}</h6>
+                                    <small class="text-muted">${new Date(release.published_at).toLocaleDateString('ja-JP')}</small>
+                                </div>
+                                <p class="mb-1 small">${release.body ? release.body.split('\n')[0] : ''}</p>
+                                ${release.commit ? `
                                 <div class="mt-2 small border-top pt-2">
                                     <p class="mb-1">
                                         <i class="bi bi-git"></i> コミット: 
-                                        <a href="https://github.com/masafumit/hackCraft2-public/commit/${data.stable.commit.hash}" 
+                                        <a href="https://github.com/masafumit/hackCraft2-public/commit/${release.commit.hash}" 
                                            target="_blank" 
                                            class="text-decoration-none">
-                                            ${data.stable.commit.hash.substring(0, 7)}
+                                            ${release.commit.hash.substring(0, 7)}
                                         </a>
-                                        <span class="text-muted ms-2">by ${data.stable.commit.author}</span>
+                                        <span class="text-muted ms-2">by ${release.commit.author}</span>
                                     </p>
-                                    <p class="text-muted mb-0 small">${data.stable.commit.message}</p>
+                                    <p class="text-muted mb-1 small">${release.commit.message}</p>
                                 </div>
                                 ` : ''}
-                            </div>
-                            <div class="d-grid gap-2">
-                                <a href="${downloadUrl}" class="btn btn-primary">
-                                    <i class="bi bi-download"></i> ダウンロード (${fileName} - ${fileSize}MB)
+                                <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary mt-2">
+                                    <i class="bi bi-download"></i> ダウンロード (${fileSize}MB)
                                 </a>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    });
+                    stableHtml += '</div>';
+                    if (stableReleases.length > 5) {
+                        stableHtml += `
+                            <div class="text-center mt-3">
+                                <a href="https://github.com/masafumit/hackCraft2-public/releases" class="btn btn-link" target="_blank">
+                                    すべての安定版リリースを見る <i class="bi bi-box-arrow-up-right"></i>
+                                </a>
+                            </div>
+                        `;
+                    }
+                    stableDiv.innerHTML = stableHtml;
                 } else {
                     stableDiv.innerHTML = '<p class="text-warning">現在、安定版のダウンロードは利用できません。</p>';
                 }
@@ -313,7 +327,7 @@
                         releasesHtml += `
                             <div class="text-center mt-3">
                                 <a href="https://github.com/masafumit/hackCraft2-public/releases" class="btn btn-link" target="_blank">
-                                    すべてのリリースを見る <i class="bi bi-box-arrow-up-right"></i>
+                                    すべてのリリース版を見る <i class="bi bi-box-arrow-up-right"></i>
                                 </a>
                             </div>
                         `;

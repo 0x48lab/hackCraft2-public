@@ -240,7 +240,8 @@
                     const asset = release.assets.find(a => a.name === 'latest.jar') || release.assets[0];
                     const downloadUrl = asset.browser_download_url;
                     const fileName = asset.name;
-                    const fileSize = (asset.size / (1024 * 1024)).toFixed(2);
+                    // サイズが極端に小さい場合は「サイズ情報なし」と表示
+                    const fileSize = asset.size < 1024 ? 'サイズ情報なし' : `${(asset.size / (1024 * 1024)).toFixed(2)}MB`;
 
                     stableHtml += `
                         <div class="list-group-item">
@@ -250,7 +251,7 @@
                             </div>
                             <p class="mb-1 small">${release.body ? release.body.split('\n')[0] : ''}</p>
                             <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary mt-2">
-                                <i class="bi bi-download"></i> ダウンロード (${fileSize}MB)
+                                <i class="bi bi-download"></i> ダウンロード${fileSize === 'サイズ情報なし' ? '' : ` (${fileSize})`}
                             </a>
                         </div>
                     `;
@@ -269,7 +270,8 @@
                     const asset = release.assets.find(a => a.name.includes('release')) || release.assets[0];
                     const downloadUrl = asset.browser_download_url;
                     const fileName = asset.name;
-                    const fileSize = (asset.size / (1024 * 1024)).toFixed(2);
+                    // サイズが極端に小さい場合は「サイズ情報なし」と表示
+                    const fileSize = asset.size < 1024 ? 'サイズ情報なし' : `${(asset.size / (1024 * 1024)).toFixed(2)}MB`;
 
                     releasesHtml += `
                         <div class="list-group-item">
@@ -279,7 +281,7 @@
                             </div>
                             <p class="mb-1 small">${release.body ? release.body.split('\n')[0] : ''}</p>
                             <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary mt-2">
-                                <i class="bi bi-download"></i> ダウンロード (${fileSize}MB)
+                                <i class="bi bi-download"></i> ダウンロード${fileSize === 'サイズ情報なし' ? '' : ` (${fileSize})`}
                             </a>
                         </div>
                     `;

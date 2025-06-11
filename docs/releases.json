@@ -1,17 +1,17 @@
 {
     "latest": {
-        "name": "develop",
-        "published_at": "2025-06-10T14:16:11Z",
-        "body": "タグ付きリリース: develop",
+        "name": "Stable Build 18",
+        "published_at": "2025-06-11T05:08:01Z",
+        "body": "Stable build from refs/heads/develop\n- Commit: 85327d17b19c7df06cf4ae0e75e2f33206d7e91f\n- Build Number: 18",
         "assets": [
             {
-                "name": "hackcraft2-develop.jar",
-                "size": 9,
-                "browser_download_url": "downloads/releases/hackcraft2-develop.jar"
+                "name": "hackcraft2-stable-20250611_050759.jar",
+                "size": 182311963,
+                "browser_download_url": "downloads/latest/hackcraft2-stable-20250611_050759.jar"
             },
             {
                 "name": "latest.jar",
-                "size": 9,
+                "size": 182311963,
                 "browser_download_url": "downloads/latest/latest.jar"
             }
         ]

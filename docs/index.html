@@ -223,7 +223,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // 安定版のリリース情報を取得
+        // リリース情報を取得
         fetch('releases.json')
             .then(response => {
                 if (!response.ok) {
@@ -235,12 +235,10 @@
                 const stableDiv = document.getElementById('stable-release');
                 if (data.latest && data.latest.assets && data.latest.assets.length > 0) {
                     let stableHtml = '<div class="list-group">';
-                    // 最新の安定版を表示
                     const release = data.latest;
                     const asset = release.assets.find(a => a.name === 'latest.jar') || release.assets[0];
                     const downloadUrl = asset.browser_download_url;
                     const fileName = asset.name;
-                    // サイズが極端に小さい場合は「サイズ情報なし」と表示
                     const fileSize = asset.size < 1024 ? 'サイズ情報なし' : `${(asset.size / (1024 * 1024)).toFixed(2)}MB`;
 
                     stableHtml += `
@@ -250,9 +248,14 @@
                                 <small class="text-muted">${new Date(release.published_at).toLocaleDateString('ja-JP')}</small>
                             </div>
                             <p class="mb-1 small">${release.body ? release.body.split('\n')[0] : ''}</p>
-                            <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary mt-2">
-                                <i class="bi bi-download"></i> ダウンロード${fileSize === 'サイズ情報なし' ? '' : ` (${fileSize})`}
-                            </a>
+                            <div class="d-flex gap-2">
+                                <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-download"></i> ダウンロード${fileSize === 'サイズ情報なし' ? '' : ` (${fileSize})`}
+                                </a>
+                                <a href="stable-history.html" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-clock-history"></i> 過去のバージョン
+                                </a>
+                            </div>
                         </div>
                     `;
                     stableHtml += '</div>';
@@ -261,16 +264,13 @@
                     stableDiv.innerHTML = '<p class="text-warning">現在、安定版のダウンロードは利用できません。</p>';
                 }
 
-                // タグ付きリリースの表示
                 const taggedDiv = document.getElementById('tagged-releases');
                 if (data.latest && data.latest.assets && data.latest.assets.length > 0) {
                     let releasesHtml = '<div class="list-group">';
-                    // 最新のリリース版を表示
                     const release = data.latest;
                     const asset = release.assets.find(a => a.name.includes('release')) || release.assets[0];
                     const downloadUrl = asset.browser_download_url;
                     const fileName = asset.name;
-                    // サイズが極端に小さい場合は「サイズ情報なし」と表示
                     const fileSize = asset.size < 1024 ? 'サイズ情報なし' : `${(asset.size / (1024 * 1024)).toFixed(2)}MB`;
 
                     releasesHtml += `
@@ -280,9 +280,14 @@
                                 <small class="text-muted">${new Date(release.published_at).toLocaleDateString('ja-JP')}</small>
                             </div>
                             <p class="mb-1 small">${release.body ? release.body.split('\n')[0] : ''}</p>
-                            <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary mt-2">
-                                <i class="bi bi-download"></i> ダウンロード${fileSize === 'サイズ情報なし' ? '' : ` (${fileSize})`}
-                            </a>
+                            <div class="d-flex gap-2">
+                                <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary">
+                                    <i class="bi bi-download"></i> ダウンロード${fileSize === 'サイズ情報なし' ? '' : ` (${fileSize})`}
+                                </a>
+                                <a href="release-history.html" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-clock-history"></i> 過去のバージョン
+                                </a>
+                            </div>
                         </div>
                     `;
                     releasesHtml += '</div>';

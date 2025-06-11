@@ -234,77 +234,121 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // 安定版とリリース版の情報を取得
-        Promise.all([
-            fetch('stable.json').then(response => response.json()),
-            fetch('releases.json').then(response => response.json())
-        ]).then(([stableData, releaseData]) => {
-            // 安定版の情報を表示
-            const stableDiv = document.getElementById('stable-release');
-            if (stableData.latest && stableData.latest.assets && stableData.latest.assets.length > 0) {
-                const release = stableData.latest;
-                const asset = release.assets[0];
-                const downloadUrl = asset.browser_download_url;
-                const fileName = asset.name;
-                const fileSize = asset.size < 1024 ? 'サイズ情報なし' : `${(asset.size / (1024 * 1024)).toFixed(2)}MB`;
+        const fetchWithTimeout = (url, timeout = 5000) => {
+            return Promise.race([
+                fetch(url).then(response => {
+                    if (!response.ok) {
+                        throw new Error(`${url}の取得に失敗しました (${response.status})`);
+                    }
+                    return response.json();
+                }),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error(`${url}の取得がタイムアウトしました`)), timeout)
+                )
+            ]);
+        };
 
-                stableDiv.innerHTML = `
+        const formatReleaseInfo = (release) => {
+            if (!release?.assets?.length) {
+                return null;
+            }
+
+            const asset = release.assets[0];
+            const downloadUrl = asset.browser_download_url;
+            const fileName = asset.name;
+            const fileSize = asset.size && asset.size > 1024 ? `${(asset.size / (1024 * 1024)).toFixed(2)}MB` : '-';
+            const releaseDate = release.published_at ? new Date(release.published_at).toLocaleDateString('ja-JP') : '日付情報なし';
+
+            // bodyの処理
+            let description = '';
+            if (release.body) {
+                const lines = release.body.split('\n')
+                    .map(line => line.trim())
+                    .filter(line => line && !line.startsWith('- Paper Version:'));
+                
+                if (lines.length > 0) {
+                    description = lines[0].replace('タグ付きリリース: ', '');
+                }
+            }
+
+            // リリース名からPaperのバージョンを推測
+            let paperVersion = release.paper_version;
+            if (!paperVersion && release.name) {
+                const match = release.name.match(/^v(\d+\.\d+\.\d+)/);
+                if (match) {
+                    paperVersion = match[1];
+                }
+            }
+
+            return {
+                name: release.name || '名前なし',
+                description,
+                releaseDate,
+                paperVersion,
+                fileSize,
+                downloadUrl,
+                fileName
+            };
+        };
+
+        const updateReleaseInfo = (elementId, data, isStable = false) => {
+            const div = document.getElementById(elementId);
+            if (!div) return;
+
+            try {
+                const release = isStable ? data?.latest : data?.release;
+                const info = formatReleaseInfo(release);
+                
+                if (!info) {
+                    div.innerHTML = `<p class="text-muted">${isStable ? '安定版' : 'リリース版'}の情報が見つかりませんでした。</p>`;
+                    return;
+                }
+
+                div.innerHTML = `
                     <div class="list-group">
                         <div class="list-group-item">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">${release.name}</h6>
-                                <small class="text-muted">${new Date(release.published_at).toLocaleDateString('ja-JP')}</small>
+                            <div class="d-flex w-100 justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-1">${info.name}</h6>
+                                    ${info.description ? `<p class="mb-1 small text-muted">${info.description}</p>` : ''}
+                                </div>
+                                <small class="text-muted">${info.releaseDate}</small>
                             </div>
-                            <p class="mb-1 small">
-                                <span class="badge bg-info">Paper ${release.paper_version}</span>
-                                ${release.body ? release.body.split('\n')[0] : ''}
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">${fileSize}</small>
-                                <a href="${downloadUrl}" class="btn btn-primary btn-sm" download="${fileName}">
+                            <div class="d-flex justify-content-between align-items-center mt-2">
+                                <div>
+                                    ${info.paperVersion ? `<span class="badge bg-info me-2">Paper ${info.paperVersion}</span>` : ''}
+                                    <small class="text-muted">${info.fileSize}</small>
+                                </div>
+                                <a href="${info.downloadUrl}" class="btn btn-primary btn-sm" download="${info.fileName}">
                                     <i class="bi bi-download"></i> ダウンロード
                                 </a>
                             </div>
                         </div>
                     </div>`;
-            } else {
-                stableDiv.innerHTML = '<p class="text-muted">安定版の情報が見つかりませんでした。</p>';
+            } catch (error) {
+                console.error(`Error updating ${elementId}:`, error);
+                div.innerHTML = `<p class="text-danger"><i class="bi bi-exclamation-triangle"></i> ${error.message || '情報の表示に失敗しました'}</p>`;
             }
+        };
 
-            // リリース版の情報を表示
-            const releaseDiv = document.getElementById('tagged-releases');
-            if (releaseData.release && releaseData.release.assets && releaseData.release.assets.length > 0) {
-                const release = releaseData.release;
-                const asset = release.assets[0];
-                const downloadUrl = asset.browser_download_url;
-                const fileName = asset.name;
-                const fileSize = asset.size < 1024 ? 'サイズ情報なし' : `${(asset.size / (1024 * 1024)).toFixed(2)}MB`;
-
-                releaseDiv.innerHTML = `
-                    <div class="list-group">
-                        <div class="list-group-item">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h6 class="mb-1">${release.name}</h6>
-                                <small class="text-muted">${new Date(release.published_at).toLocaleDateString('ja-JP')}</small>
-                            </div>
-                            <p class="mb-1 small">
-                                <span class="badge bg-info">Paper ${release.paper_version}</span>
-                                ${release.body ? release.body.split('\n')[0] : ''}
-                            </p>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted">${fileSize}</small>
-                                <a href="${downloadUrl}" class="btn btn-primary btn-sm" download="${fileName}">
-                                    <i class="bi bi-download"></i> ダウンロード
-                                </a>
-                            </div>
-                        </div>
-                    </div>`;
-            } else {
-                releaseDiv.innerHTML = '<p class="text-muted">リリース版の情報が見つかりませんでした。</p>';
-            }
-        }).catch(error => {
-            console.error('Error:', error);
-            document.getElementById('stable-release').innerHTML = '<p class="text-danger">リリース情報の取得に失敗しました。</p>';
-            document.getElementById('tagged-releases').innerHTML = '<p class="text-danger">リリース情報の取得に失敗しました。</p>';
+        // 各ファイルを個別に取得して表示
+        Promise.allSettled([
+            fetchWithTimeout('stable.json')
+                .then(data => updateReleaseInfo('stable-release', data, true))
+                .catch(error => {
+                    console.error('Stable release error:', error);
+                    document.getElementById('stable-release').innerHTML = 
+                        `<p class="text-warning"><i class="bi bi-exclamation-triangle"></i> ${error.message}</p>`;
+                }),
+            fetchWithTimeout('releases.json')
+                .then(data => updateReleaseInfo('tagged-releases', data))
+                .catch(error => {
+                    console.error('Tagged release error:', error);
+                    document.getElementById('tagged-releases').innerHTML = 
+                        `<p class="text-warning"><i class="bi bi-exclamation-triangle"></i> ${error.message}</p>`;
+                })
+        ]).then(results => {
+            console.log('All release info updates completed');
         });
     </script>
 </body>

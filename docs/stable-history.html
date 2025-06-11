@@ -58,19 +58,21 @@
         // 安定版の履歴を取得
         async function fetchStableHistory() {
             try {
-                const response = await fetch('downloads/latest/');
-                const text = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
-                const links = Array.from(doc.querySelectorAll('a'))
-                    .filter(a => a.href.endsWith('.jar'))
-                    .map(a => ({
-                        name: a.textContent,
-                        url: a.href,
-                        date: a.textContent.match(/\d{8}_\d{6}/)?.[0] || ''
-                    }))
-                    .sort((a, b) => b.date.localeCompare(a.date));
-                return links;
+                const response = await fetch('stable-list.json', {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                });
+                const data = await response.json();
+                if (!data?.releases?.length) {
+                    return [];
+                }
+                return data.releases.sort((a, b) => 
+                    new Date(b.published_at) - new Date(a.published_at)
+                );
             } catch (error) {
                 console.error('安定版の履歴を取得できませんでした:', error);
                 return [];
@@ -94,7 +96,8 @@
                         <div>
                             <h6 class="mb-1">${item.name}</h6>
                             <small class="text-muted">
-                                ビルド日時: ${item.date.replace(/(\d{4})(\d{2})(\d{2})_(\d{2})(\d{2})(\d{2})/, '$1/$2/$3 $4:$5:$6')}
+                                リリース日時: ${new Date(item.published_at).toLocaleString('ja-JP')}<br>
+                                ファイルサイズ: ${(item.size / (1024 * 1024)).toFixed(2)}MB
                             </small>
                         </div>
                         <a href="${item.url}" class="btn btn-sm btn-outline-primary">

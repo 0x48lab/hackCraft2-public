@@ -1,0 +1,96 @@
+name: Generate Release Lists
+
+on:
+  push:
+    paths:
+      - 'downloads/**'
+      - '.github/workflows/generate-release-lists.yml'
+  workflow_dispatch:
+
+jobs:
+  generate-lists:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Generate Stable List
+        run: |
+          # 安定版の一覧を生成
+          echo "{" > stable-list.json
+          echo "  \"releases\": [" >> stable-list.json
+          
+          # downloads/latest/ディレクトリ内のjarファイルを検索
+          if [ -d "docs/downloads/latest" ]; then
+            files=$(find docs/downloads/latest -name "*.jar" -type f)
+            first=true
+            for file in $files; do
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo "," >> stable-list.json
+              fi
+              
+              filename=$(basename "$file")
+              size=$(stat -f%z "$file")
+              date=$(stat -f%Sm -t "%Y-%m-%dT%H:%M:%SZ" "$file")
+              
+              echo "    {" >> stable-list.json
+              echo "      \"name\": \"$filename\"," >> stable-list.json
+              echo "      \"url\": \"downloads/latest/$filename\"," >> stable-list.json
+              echo "      \"size\": $size," >> stable-list.json
+              echo "      \"published_at\": \"$date\"" >> stable-list.json
+              echo "    }" >> stable-list.json
+            done
+          fi
+          
+          echo "  ]" >> stable-list.json
+          echo "}" >> stable-list.json
+          
+          # 生成したJSONをdocsディレクトリに移動
+          mv stable-list.json docs/stable-list.json
+
+      - name: Generate Release List
+        run: |
+          # リリース版の一覧を生成
+          echo "{" > release-list.json
+          echo "  \"releases\": [" >> release-list.json
+          
+          # downloads/releases/ディレクトリ内のjarファイルを検索
+          if [ -d "docs/downloads/releases" ]; then
+            files=$(find docs/downloads/releases -name "*.jar" -type f)
+            first=true
+            for file in $files; do
+              if [ "$first" = true ]; then
+                first=false
+              else
+                echo "," >> release-list.json
+              fi
+              
+              filename=$(basename "$file")
+              size=$(stat -f%z "$file")
+              date=$(stat -f%Sm -t "%Y-%m-%dT%H:%M:%SZ" "$file")
+              version=$(echo "$filename" | grep -o "R[0-9]\+-[a-z0-9]\+" || echo "")
+              
+              echo "    {" >> release-list.json
+              echo "      \"name\": \"$filename\"," >> release-list.json
+              echo "      \"url\": \"downloads/releases/$filename\"," >> release-list.json
+              echo "      \"size\": $size," >> release-list.json
+              echo "      \"version\": \"$version\"," >> release-list.json
+              echo "      \"published_at\": \"$date\"" >> release-list.json
+              echo "    }" >> release-list.json
+            done
+          fi
+          
+          echo "  ]" >> release-list.json
+          echo "}" >> release-list.json
+          
+          # 生成したJSONをdocsディレクトリに移動
+          mv release-list.json docs/release-list.json
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/stable-list.json docs/release-list.json
+          git commit -m "Update release lists" || exit 0
+          git push 

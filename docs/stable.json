@@ -1,0 +1,15 @@
+{
+    "latest": {
+        "name": "Stable Build 22",
+        "published_at": "2025-06-11T16:11:36Z",
+        "paper_version": "",
+        "body": "Stable build from refs/heads/develop\n- Commit: c39b2040d325ef20e1929fee57ec78121c31cb2e\n- Build Number: 22\n- Paper Version: ",
+        "assets": [
+            {
+                "name": "hackcraft2-stable-20250611_161135.jar",
+                "size": 182311963,
+                "browser_download_url": "downloads/latest/hackcraft2-stable-20250611_161135.jar"
+            }
+        ]
+    }
+}

@@ -233,53 +233,28 @@
             })
             .then(data => {
                 const stableDiv = document.getElementById('stable-release');
-                if (data.stable && data.stable.assets && data.stable.assets.length > 0) {
+                if (data.latest && data.latest.assets && data.latest.assets.length > 0) {
                     let stableHtml = '<div class="list-group">';
-                    // 安定版の履歴を表示（最新5件）
-                    const stableReleases = data.stable_releases || [];
-                    stableReleases.slice(0, 5).forEach(release => {
-                        const asset = release.assets[0];
-                        const downloadUrl = asset.browser_download_url;
-                        const fileName = asset.name;
-                        const fileSize = (asset.size / (1024 * 1024)).toFixed(2);
+                    // 最新の安定版を表示
+                    const release = data.latest;
+                    const asset = release.assets.find(a => a.name === 'latest.jar') || release.assets[0];
+                    const downloadUrl = asset.browser_download_url;
+                    const fileName = asset.name;
+                    const fileSize = (asset.size / (1024 * 1024)).toFixed(2);
 
-                        stableHtml += `
-                            <div class="list-group-item">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">${release.name}</h6>
-                                    <small class="text-muted">${new Date(release.published_at).toLocaleDateString('ja-JP')}</small>
-                                </div>
-                                <p class="mb-1 small">${release.body ? release.body.split('\n')[0] : ''}</p>
-                                ${release.commit ? `
-                                <div class="mt-2 small border-top pt-2">
-                                    <p class="mb-1">
-                                        <i class="bi bi-git"></i> コミット: 
-                                        <a href="https://github.com/masafumit/hackCraft2-public/commit/${release.commit.hash}" 
-                                           target="_blank" 
-                                           class="text-decoration-none">
-                                            ${release.commit.hash.substring(0, 7)}
-                                        </a>
-                                        <span class="text-muted ms-2">by ${release.commit.author}</span>
-                                    </p>
-                                    <p class="text-muted mb-1 small">${release.commit.message}</p>
-                                </div>
-                                ` : ''}
-                                <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary mt-2">
-                                    <i class="bi bi-download"></i> ダウンロード (${fileSize}MB)
-                                </a>
+                    stableHtml += `
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">${release.name}</h6>
+                                <small class="text-muted">${new Date(release.published_at).toLocaleDateString('ja-JP')}</small>
                             </div>
-                        `;
-                    });
+                            <p class="mb-1 small">${release.body ? release.body.split('\n')[0] : ''}</p>
+                            <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary mt-2">
+                                <i class="bi bi-download"></i> ダウンロード (${fileSize}MB)
+                            </a>
+                        </div>
+                    `;
                     stableHtml += '</div>';
-                    if (stableReleases.length > 5) {
-                        stableHtml += `
-                            <div class="text-center mt-3">
-                                <a href="https://github.com/masafumit/hackCraft2-public/releases" class="btn btn-link" target="_blank">
-                                    すべての安定版リリースを見る <i class="bi bi-box-arrow-up-right"></i>
-                                </a>
-                            </div>
-                        `;
-                    }
                     stableDiv.innerHTML = stableHtml;
                 } else {
                     stableDiv.innerHTML = '<p class="text-warning">現在、安定版のダウンロードは利用できません。</p>';
@@ -287,51 +262,28 @@
 
                 // タグ付きリリースの表示
                 const taggedDiv = document.getElementById('tagged-releases');
-                if (data.releases && data.releases.length > 0) {
+                if (data.latest && data.latest.assets && data.latest.assets.length > 0) {
                     let releasesHtml = '<div class="list-group">';
-                    data.releases.slice(0, 5).forEach(release => {
-                        const asset = release.assets[0];
-                        const downloadUrl = asset.browser_download_url;
-                        const fileName = asset.name;
-                        const fileSize = (asset.size / (1024 * 1024)).toFixed(2);
+                    // 最新のリリース版を表示
+                    const release = data.latest;
+                    const asset = release.assets.find(a => a.name.includes('release')) || release.assets[0];
+                    const downloadUrl = asset.browser_download_url;
+                    const fileName = asset.name;
+                    const fileSize = (asset.size / (1024 * 1024)).toFixed(2);
 
-                        releasesHtml += `
-                            <div class="list-group-item">
-                                <div class="d-flex w-100 justify-content-between">
-                                    <h6 class="mb-1">${release.name}</h6>
-                                    <small class="text-muted">${new Date(release.published_at).toLocaleDateString('ja-JP')}</small>
-                                </div>
-                                <p class="mb-1 small">${release.body ? release.body.split('\n')[0] : ''}</p>
-                                ${release.commit ? `
-                                <div class="mt-2 small border-top pt-2">
-                                    <p class="mb-1">
-                                        <i class="bi bi-git"></i> コミット: 
-                                        <a href="https://github.com/masafumit/hackCraft2-public/commit/${release.commit.hash}" 
-                                           target="_blank" 
-                                           class="text-decoration-none">
-                                            ${release.commit.hash.substring(0, 7)}
-                                        </a>
-                                        <span class="text-muted ms-2">by ${release.commit.author}</span>
-                                    </p>
-                                    <p class="text-muted mb-1 small">${release.commit.message}</p>
-                                </div>
-                                ` : ''}
-                                <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary mt-2">
-                                    <i class="bi bi-download"></i> ダウンロード (${fileSize}MB)
-                                </a>
+                    releasesHtml += `
+                        <div class="list-group-item">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">${release.name}</h6>
+                                <small class="text-muted">${new Date(release.published_at).toLocaleDateString('ja-JP')}</small>
                             </div>
-                        `;
-                    });
+                            <p class="mb-1 small">${release.body ? release.body.split('\n')[0] : ''}</p>
+                            <a href="${downloadUrl}" class="btn btn-sm btn-outline-primary mt-2">
+                                <i class="bi bi-download"></i> ダウンロード (${fileSize}MB)
+                            </a>
+                        </div>
+                    `;
                     releasesHtml += '</div>';
-                    if (data.releases.length > 5) {
-                        releasesHtml += `
-                            <div class="text-center mt-3">
-                                <a href="https://github.com/masafumit/hackCraft2-public/releases" class="btn btn-link" target="_blank">
-                                    すべてのリリース版を見る <i class="bi bi-box-arrow-up-right"></i>
-                                </a>
-                            </div>
-                        `;
-                    }
                     taggedDiv.innerHTML = releasesHtml;
                 } else {
                     taggedDiv.innerHTML = '<p class="text-warning">現在、リリース版のダウンロードは利用できません。</p>';

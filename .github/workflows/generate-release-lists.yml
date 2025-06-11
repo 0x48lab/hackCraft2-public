@@ -31,8 +31,8 @@ jobs:
               fi
               
               filename=$(basename "$file")
-              size=$(stat -f%z "$file")
-              date=$(stat -f%Sm -t "%Y-%m-%dT%H:%M:%SZ" "$file")
+              size=$(stat -c%s "$file")
+              date=$(stat -c%y "$file" | date -u +"%Y-%m-%dT%H:%M:%SZ")
               
               echo "    {" >> stable-list.json
               echo "      \"name\": \"$filename\"," >> stable-list.json
@@ -67,8 +67,8 @@ jobs:
               fi
               
               filename=$(basename "$file")
-              size=$(stat -f%z "$file")
-              date=$(stat -f%Sm -t "%Y-%m-%dT%H:%M:%SZ" "$file")
+              size=$(stat -c%s "$file")
+              date=$(stat -c%y "$file" | date -u +"%Y-%m-%dT%H:%M:%SZ")
               version=$(echo "$filename" | grep -o "R[0-9]\+-[a-z0-9]\+" || echo "")
               
               echo "    {" >> release-list.json

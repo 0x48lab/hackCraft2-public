@@ -1,17 +1,17 @@
 {
     "latest": {
-        "name": "v1.21.4-R50-a10",
-        "published_at": "2025-06-11T08:49:48Z",
-        "body": "タグ付きリリース: v1.21.4-R50-a10\n- Paper Version: ",
+        "name": "Stable Build 21",
+        "published_at": "2025-06-11T12:19:45Z",
+        "body": "Stable build from refs/heads/develop\n- Commit: 2342acae49f97c060727e1872e15181d39d27064\n- Build Number: 21\n- Paper Version: ",
         "assets": [
             {
-                "name": "hackcraft2-release--1.21.4-R50-a10.jar",
-                "size": 9,
-                "browser_download_url": "downloads/releases/hackcraft2-release--1.21.4-R50-a10.jar"
+                "name": "hackcraft2-stable--20250611_121944.jar",
+                "size": 182311963,
+                "browser_download_url": "downloads/latest/hackcraft2-stable--20250611_121944.jar"
             },
             {
                 "name": "latest.jar",
-                "size": 9,
+                "size": 182311963,
                 "browser_download_url": "downloads/latest/latest.jar"
             }
         ]

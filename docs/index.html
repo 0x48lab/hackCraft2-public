@@ -236,7 +236,14 @@
         // 安定版とリリース版の情報を取得
         const fetchWithTimeout = (url, timeout = 5000) => {
             return Promise.race([
-                fetch(url).then(response => {
+                fetch(url, {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                }).then(response => {
                     if (!response.ok) {
                         throw new Error(`${url}の取得に失敗しました (${response.status})`);
                     }

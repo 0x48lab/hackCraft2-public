@@ -58,19 +58,21 @@
         // リリース版の履歴を取得
         async function fetchReleaseHistory() {
             try {
-                const response = await fetch('downloads/releases/');
-                const text = await response.text();
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
-                const links = Array.from(doc.querySelectorAll('a'))
-                    .filter(a => a.href.endsWith('.jar'))
-                    .map(a => ({
-                        name: a.textContent,
-                        url: a.href,
-                        version: a.textContent.match(/R\d+-a\d+/)?.[0] || ''
-                    }))
-                    .sort((a, b) => b.version.localeCompare(a.version));
-                return links;
+                const response = await fetch('release-list.json', {
+                    cache: 'no-store',
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                });
+                const data = await response.json();
+                if (!data?.releases?.length) {
+                    return [];
+                }
+                return data.releases.sort((a, b) => 
+                    b.version.localeCompare(a.version)
+                );
             } catch (error) {
                 console.error('リリース版の履歴を取得できませんでした:', error);
                 return [];
@@ -94,7 +96,9 @@
                         <div>
                             <h6 class="mb-1">${item.name}</h6>
                             <small class="text-muted">
-                                バージョン: ${item.version}
+                                バージョン: ${item.version}<br>
+                                リリース日時: ${new Date(item.published_at).toLocaleString('ja-JP')}<br>
+                                ファイルサイズ: ${(item.size / (1024 * 1024)).toFixed(2)}MB
                             </small>
                         </div>
                         <a href="${item.url}" class="btn btn-sm btn-outline-primary">

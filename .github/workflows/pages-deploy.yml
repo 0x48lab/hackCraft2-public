@@ -1,4 +1,4 @@
-name: Deploy GitHub Pages
+name: pages-deploy
 
 on:
   push:
@@ -29,6 +29,16 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v3
+
+      - name: Add cache control headers
+        run: |
+          # _headersファイルを作成してキャッシュ制御を設定
+          cat > docs/_headers << EOF
+          /*
+            Cache-Control: no-cache, no-store, must-revalidate
+            Pragma: no-cache
+            Expires: 0
+          EOF
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v2

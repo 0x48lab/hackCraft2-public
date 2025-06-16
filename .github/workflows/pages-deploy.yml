@@ -50,10 +50,15 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
+            // デバッグ情報の出力
+            console.log('Fetching releases...');
+            
             const releases = await github.rest.repos.listReleases({
               owner: context.repo.owner,
               repo: context.repo.repo
             });
+            
+            console.log('Found releases:', releases.data.map(r => r.tag_name));
             
             const releaseData = releases.data.map(release => ({
               tag_name: release.tag_name,
@@ -67,14 +72,24 @@ jobs:
                 browser_download_url: asset.browser_download_url
               }))
             }));
-            
-            // 最新のリリースを特定（vで始まらないタグ）
-            const latestRelease = releaseData.find(r => !r.tag_name.startsWith('v'));
+
+            // リリースを分類
+            const stableReleases = releaseData.filter(r => r.tag_name.startsWith('stable-'))
+              .sort((a, b) => {
+                // stable-32 から数字部分を抽出して比較
+                const numA = parseInt(a.tag_name.split('-')[1]);
+                const numB = parseInt(b.tag_name.split('-')[1]);
+                return numB - numA; // 降順（新しい順）
+              });
+
+            // 最新のstableリリース
+            const latestStable = stableReleases[0];
+            console.log('Latest stable release:', latestStable?.tag_name);
             
             // リリース情報をJSONファイルとして保存
             const fs = require('fs');
             fs.writeFileSync('docs/releases.json', JSON.stringify(releaseData, null, 2));
-            fs.writeFileSync('docs/latest-release.json', JSON.stringify(latestRelease, null, 2));
+            fs.writeFileSync('docs/latest-release.json', JSON.stringify(latestStable, null, 2));
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

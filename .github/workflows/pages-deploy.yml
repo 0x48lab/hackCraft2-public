@@ -56,8 +56,8 @@ jobs:
             console.log('Fetching releases...');
             
             const releases = await github.rest.repos.listReleases({
-              owner: context.repo.owner,
-              repo: context.repo.repo
+              owner: '0x48lab',  // hackCraft2のオーナー
+              repo: 'hackCraft2'  // hackCraft2のリポジトリ名
             });
             
             console.log('Found releases:', releases.data.map(r => r.tag_name));
@@ -78,7 +78,6 @@ jobs:
             // リリースを分類
             const stableReleases = releaseData.filter(r => r.tag_name.startsWith('stable-'))
               .sort((a, b) => {
-                // stable-32 から数字部分を抽出して比較
                 const numA = parseInt(a.tag_name.split('-')[1]);
                 const numB = parseInt(b.tag_name.split('-')[1]);
                 return numB - numA; // 降順（新しい順）
@@ -90,8 +89,35 @@ jobs:
             
             // リリース情報をJSONファイルとして保存
             const fs = require('fs');
-            fs.writeFileSync('docs/releases.json', JSON.stringify(releaseData, null, 2));
-            fs.writeFileSync('docs/latest-release.json', JSON.stringify(latestStable, null, 2));
+            const releasesPath = 'docs/releases.json';
+            const latestPath = 'docs/latest-release.json';
+            
+            try {
+              fs.writeFileSync(releasesPath, JSON.stringify(releaseData, null, 2));
+              fs.writeFileSync(latestPath, JSON.stringify(latestStable, null, 2));
+              console.log('Successfully wrote release data to:', releasesPath, 'and', latestPath);
+              
+              // ファイルが実際に作成されたか確認
+              if (fs.existsSync(releasesPath) && fs.existsSync(latestPath)) {
+                console.log('Files exist after writing');
+                console.log('releases.json size:', fs.statSync(releasesPath).size);
+                console.log('latest-release.json size:', fs.statSync(latestPath).size);
+              } else {
+                console.log('Error: Files do not exist after writing');
+              }
+            } catch (error) {
+              console.error('Error writing release data:', error);
+              throw error;
+            }
+
+      - name: List generated files
+        run: |
+          echo "Contents of docs directory:"
+          ls -la docs/
+          echo "\nContents of releases.json:"
+          cat docs/releases.json
+          echo "\nContents of latest-release.json:"
+          cat docs/latest-release.json
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

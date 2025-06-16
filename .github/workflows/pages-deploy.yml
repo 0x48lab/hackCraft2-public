@@ -1,8 +1,8 @@
 name: pages-deploy
 
 on:
-  release:
-    types: [published, edited]  # リリースが公開または編集されたとき
+  repository_dispatch:
+    types: [release_published, release_edited]  # hackCraft2からのリリースイベント
   workflow_dispatch:  # 手動実行も可能に
 
 permissions:
@@ -10,15 +10,17 @@ permissions:
   pages: write
   id-token: write
 
+# 環境保護ルールの設定
+environment:
+  name: github-pages
+  url: ${{ steps.deployment.outputs.page_url }}
+
 concurrency:
   group: "pages"
   cancel-in-progress: false
 
 jobs:
   deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

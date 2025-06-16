@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- キャッシュ制御を強化 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <!-- 自動更新 -->
+    <meta http-equiv="refresh" content="300">
     <title>hackCraft2 - Minecraft Modding Platform</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
@@ -96,16 +102,11 @@
                         <div class="card h-100">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <i class="bi bi-stars"></i> 安定版 (Stable)
+                                    <i class="bi bi-lightning-charge"></i> 最新ビルド
                                 </h5>
-                                <p class="card-text">最新の安定版ビルドをダウンロードできます。最も安定した動作が期待できるバージョンです。</p>
-                                <div id="stable-release">
-                                    <p class="text-muted">リリース情報を読み込み中...</p>
-                                </div>
-                                <div class="text-end mt-2">
-                                    <a href="stable-history.html" class="btn btn-outline-secondary btn-sm">
-                                        <i class="bi bi-clock-history"></i> 過去の安定版を表示
-                                    </a>
+                                <p class="card-text">最新の開発ビルドをダウンロードできます。最新の機能や修正が含まれていますが、安定性は保証されません。</p>
+                                <div id="latest-build">
+                                    <p class="text-muted">ビルド情報を読み込み中...</p>
                                 </div>
                             </div>
                         </div>
@@ -114,16 +115,25 @@
                         <div class="card h-100">
                             <div class="card-body">
                                 <h5 class="card-title">
-                                    <i class="bi bi-tags"></i> リリース版
+                                    <i class="bi bi-tags"></i> 安定版リリース
                                 </h5>
-                                <p class="card-text">タグ付きのリリースビルドをダウンロードできます。特定のバージョンが必要な場合にご利用ください。</p>
-                                <div id="tagged-releases">
+                                <p class="card-text">タグ付きの安定版リリースをダウンロードできます。テスト済みで安定した動作が期待できるバージョンです。</p>
+                                <div id="stable-release">
                                     <p class="text-muted">リリース情報を読み込み中...</p>
                                 </div>
-                                <div class="text-end mt-2">
-                                    <a href="release-history.html" class="btn btn-outline-secondary btn-sm">
-                                        <i class="bi bi-clock-history"></i> 過去のリリース版を表示
-                                    </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <i class="bi bi-clock-history"></i> 過去のリリース
+                                </h5>
+                                <div id="release-history">
+                                    <p class="text-muted">リリース履歴を読み込み中...</p>
                                 </div>
                             </div>
                         </div>
@@ -233,7 +243,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // 安定版とリリース版の情報を取得
+        // キャッシュを無効化してデータを取得する共通関数
         const fetchWithTimeout = (url, timeout = 5000) => {
             return Promise.race([
                 fetch(url, {
@@ -260,141 +270,142 @@
                 return null;
             }
 
-            const asset = release.assets[0];
-            const downloadUrl = asset.browser_download_url;
-            const fileName = asset.name;
-            const fileSize = asset.size && asset.size > 1024 ? `${(asset.size / (1024 * 1024)).toFixed(2)}MB` : '-';
+            const jarAsset = release.assets.find(asset => asset.name.endsWith('.jar'));
+            if (!jarAsset) {
+                return null;
+            }
+
+            const downloadUrl = jarAsset.browser_download_url;
+            const fileName = jarAsset.name;
+            const fileSize = jarAsset.size ? `${(jarAsset.size / (1024 * 1024)).toFixed(2)}MB` : '-';
             const releaseDate = release.published_at ? new Date(release.published_at).toLocaleDateString('ja-JP') : '日付情報なし';
+            const downloadCount = jarAsset.download_count || 0;
 
-            // bodyの処理
-            let description = '';
-            if (release.body) {
-                const lines = release.body.split('\n')
-                    .map(line => line.trim())
-                    .filter(line => line && !line.startsWith('- Paper Version:'));
-                
-                if (lines.length > 0) {
-                    description = lines[0].replace('タグ付きリリース: ', '');
-                }
-            }
-
-            // リリース名からPaperのバージョンを推測
-            let paperVersion = release.paper_version;
-            if (!paperVersion && release.name) {
-                const match = release.name.match(/^v(\d+\.\d+\.\d+)/);
-                if (match) {
-                    paperVersion = match[1];
-                }
-            }
+            // リリースタイプの判定
+            const isStableRelease = release.tag_name.startsWith('v');
+            const version = isStableRelease ? 
+                release.tag_name.substring(1) : // v1.2.3 -> 1.2.3
+                release.tag_name;
 
             return {
-                name: release.name || '名前なし',
-                description,
+                name: release.name || release.tag_name,
+                tag_name: release.tag_name,
+                version: version,
+                description: release.body || '',
                 releaseDate,
-                paperVersion,
                 fileSize,
                 downloadUrl,
-                fileName
+                fileName,
+                downloadCount,
+                isStableRelease,
+                buildDate: release.published_at ? new Date(release.published_at) : null
             };
         };
 
-        const updateReleaseInfo = (elementId, data, isStable = false) => {
-            const div = document.getElementById(elementId);
-            if (!div) return;
+        const createReleaseCard = (info) => {
+            if (!info) return '';
 
-            try {
-                const release = isStable ? data?.latest : data?.release;
-                const info = formatReleaseInfo(release);
-                
-                if (!info) {
-                    div.innerHTML = `<p class="text-muted">${isStable ? '安定版' : 'リリース版'}の情報が見つかりませんでした。</p>`;
-                    return;
-                }
+            const description = info.description
+                .split('\n')
+                .filter(line => line.trim() && !line.startsWith('- Paper Version:'))
+                .slice(0, 2)
+                .join('<br>');
 
-                div.innerHTML = `
-                    <div class="list-group">
-                        <div class="list-group-item">
-                            <div class="d-flex w-100 justify-content-between align-items-center">
-                                <div>
-                                    <h6 class="mb-1">${info.name}</h6>
-                                    ${info.description ? `<p class="mb-1 small text-muted">${info.description}</p>` : ''}
-                                </div>
-                                <small class="text-muted">${info.releaseDate}</small>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center mt-2">
-                                <div>
-                                    ${info.paperVersion ? `<span class="badge bg-info me-2">Paper ${info.paperVersion}</span>` : ''}
-                                    <small class="text-muted">${info.fileSize}</small>
-                                </div>
-                                <a href="${info.downloadUrl}" class="btn btn-primary btn-sm" download="${info.fileName}">
-                                    <i class="bi bi-download"></i> ダウンロード
-                                </a>
-                            </div>
+            const badgeClass = info.isStableRelease ? 'bg-success' : 'bg-warning';
+            const badgeText = info.isStableRelease ? `v${info.version}` : '最新ビルド';
+
+            return `
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between align-items-center">
+                        <div>
+                            <h6 class="mb-1">
+                                ${info.name}
+                                <span class="badge ${badgeClass} ms-2">${badgeText}</span>
+                            </h6>
+                            ${description ? `<p class="mb-1 small text-muted">${description}</p>` : ''}
                         </div>
-                    </div>`;
-            } catch (error) {
-                console.error(`Error updating ${elementId}:`, error);
-                div.innerHTML = `<p class="text-danger"><i class="bi bi-exclamation-triangle"></i> ${error.message || '情報の表示に失敗しました'}</p>`;
-            }
-        };
-
-        // コミット情報を取得して表示
-        const displayCommitInfo = async () => {
-            try {
-                const commitInfo = await fetchWithTimeout('commit-info.json');
-                const stableReleaseDiv = document.getElementById('stable-release');
-                
-                const commitDate = new Date(commitInfo.date);
-                const formattedDate = commitDate.toLocaleDateString('ja-JP', {
-                    year: 'numeric',
-                    month: 'numeric',
-                    day: 'numeric'
-                });
-
-                stableReleaseDiv.innerHTML = `
-                    <div class="mb-3">
-                        <h6>Stable Build ${commitInfo.hash.substring(0, 7)}</h6>
-                        <p class="mb-1">${commitInfo.message}</p>
-                        <p class="text-muted small mb-2">
-                            <i class="bi bi-person"></i> ${commitInfo.author} - ${formattedDate}
-                        </p>
-                        <a href="https://github.com/masafumi-t/hackCraft2-public/commit/${commitInfo.hash}" 
-                           target="_blank" class="btn btn-primary btn-sm">
+                        <small class="text-muted">${info.releaseDate}</small>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <div>
+                            <small class="text-muted">${info.fileSize}</small>
+                            <small class="text-muted ms-2">
+                                <i class="bi bi-download"></i> ${info.downloadCount.toLocaleString()}
+                            </small>
+                        </div>
+                        <a href="${info.downloadUrl}" class="btn btn-primary btn-sm" download="${info.fileName}">
                             <i class="bi bi-download"></i> ダウンロード
                         </a>
                     </div>
-                `;
+                </div>`;
+        };
+
+        const updateReleaseInfo = async () => {
+            try {
+                const releases = await fetchWithTimeout('releases.json');
+                const latestRelease = await fetchWithTimeout('latest-release.json');
+
+                // 最新ビルドの表示を更新
+                const latestBuildDiv = document.getElementById('latest-build');
+                const latestInfo = formatReleaseInfo(latestRelease);
+                if (latestInfo && !latestInfo.isStableRelease) {
+                    latestBuildDiv.innerHTML = `
+                        <div class="list-group">
+                            ${createReleaseCard(latestInfo)}
+                        </div>`;
+                } else {
+                    latestBuildDiv.innerHTML = '<p class="text-muted">最新ビルドの情報が見つかりませんでした。</p>';
+                }
+
+                // 安定版リリースの表示を更新
+                const stableReleaseDiv = document.getElementById('stable-release');
+                const stableReleases = releases
+                    .map(formatReleaseInfo)
+                    .filter(info => info && info.isStableRelease)
+                    .sort((a, b) => b.buildDate - a.buildDate);
+                
+                const latestStable = stableReleases[0];
+                if (latestStable) {
+                    stableReleaseDiv.innerHTML = `
+                        <div class="list-group">
+                            ${createReleaseCard(latestStable)}
+                        </div>`;
+                } else {
+                    stableReleaseDiv.innerHTML = '<p class="text-muted">安定版リリースの情報が見つかりませんでした。</p>';
+                }
+
+                // リリース履歴の表示を更新
+                const releaseHistoryDiv = document.getElementById('release-history');
+                const releaseHistory = stableReleases.slice(1, 6); // 最新の安定版を除く過去5件
+
+                if (releaseHistory.length > 0) {
+                    releaseHistoryDiv.innerHTML = `
+                        <div class="list-group">
+                            ${releaseHistory.map(createReleaseCard).join('')}
+                        </div>`;
+                } else {
+                    releaseHistoryDiv.innerHTML = '<p class="text-muted">過去のリリース情報が見つかりませんでした。</p>';
+                }
+
             } catch (error) {
-                console.error('コミット情報の取得に失敗しました:', error);
-                document.getElementById('stable-release').innerHTML = `
-                    <div class="alert alert-warning">
-                        <i class="bi bi-exclamation-triangle"></i> リリース情報の取得に失敗しました
-                    </div>
-                `;
+                console.error('リリース情報の更新に失敗しました:', error);
+                ['latest-build', 'stable-release', 'release-history'].forEach(id => {
+                    const div = document.getElementById(id);
+                    if (div) {
+                        div.innerHTML = `
+                            <div class="alert alert-warning">
+                                <i class="bi bi-exclamation-triangle"></i> リリース情報の取得に失敗しました
+                            </div>`;
+                    }
+                });
             }
         };
 
-        // ページ読み込み時にコミット情報を表示
-        document.addEventListener('DOMContentLoaded', displayCommitInfo);
-
-        // 各ファイルを個別に取得して表示
-        Promise.allSettled([
-            fetchWithTimeout('stable.json')
-                .then(data => updateReleaseInfo('stable-release', data, true))
-                .catch(error => {
-                    console.error('Stable release error:', error);
-                    document.getElementById('stable-release').innerHTML = 
-                        `<p class="text-warning"><i class="bi bi-exclamation-triangle"></i> ${error.message}</p>`;
-                }),
-            fetchWithTimeout('releases.json')
-                .then(data => updateReleaseInfo('tagged-releases', data))
-                .catch(error => {
-                    console.error('Tagged release error:', error);
-                    document.getElementById('tagged-releases').innerHTML = 
-                        `<p class="text-warning"><i class="bi bi-exclamation-triangle"></i> ${error.message}</p>`;
-                })
-        ]).then(results => {
-            console.log('All release info updates completed');
+        // ページ読み込み時にリリース情報を表示
+        document.addEventListener('DOMContentLoaded', () => {
+            updateReleaseInfo();
+            // 5分ごとに自動更新
+            setInterval(updateReleaseInfo, 300000);
         });
     </script>
 </body>

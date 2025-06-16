@@ -79,19 +79,29 @@ jobs:
               return;
             }
 
-            // stable.jsonの形式に合わせてデータを整形
-            const stableData = {
+            // stable.jsonの内容を取得
+            const stableJsonResponse = await github.rest.repos.getReleaseAsset({
+              owner: '0x48lab',
+              repo: 'hackCraft2-public',
+              asset_id: latestStable.assets.find(a => a.name === 'stable.json').id
+            });
+
+            const stableData = JSON.parse(Buffer.from(stableJsonResponse.data.content, 'base64').toString());
+            console.log('Stable data:', stableData);
+
+            // 表示用のデータを整形
+            const displayData = {
               latest: {
-                name: latestStable.name,
-                published_at: latestStable.published_at,
-                paper_version: "",  // 必要に応じて設定
-                commit_hash: latestStable.tag_name,  // stable-32 のようなタグ名をそのまま使用
-                body: latestStable.body,
-                assets: latestStable.assets.map(asset => ({
-                  name: asset.name,
-                  size: asset.size,
-                  browser_download_url: asset.browser_download_url  // GitHub ReleasesのURLをそのまま使用
-                }))
+                name: `Stable Build ${stableData.build_number}`,
+                published_at: stableData.release_date,
+                paper_version: stableData.paper_version,
+                commit_hash: latestStable.tag_name,  // stable-27 のようなタグ名
+                body: `Stable build from ${stableData.version}\n- Commit: ${stableData.commit_hash}\n- Build Number: ${stableData.build_number}\n- Paper Version: ${stableData.paper_version}`,
+                assets: [{
+                  name: latestStable.assets.find(a => a.name.endsWith('.jar')).name,
+                  size: latestStable.assets.find(a => a.name.endsWith('.jar')).size,
+                  browser_download_url: stableData.download_url
+                }]
               }
             };
             
@@ -107,7 +117,7 @@ jobs:
               }
 
               // ファイルの書き込み
-              fs.writeFileSync(stablePath, JSON.stringify(stableData, null, 2));
+              fs.writeFileSync(stablePath, JSON.stringify(displayData, null, 2));
               
               // パーミッションの設定
               fs.chmodSync(stablePath, '644');

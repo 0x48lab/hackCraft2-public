@@ -342,50 +342,37 @@
 
         const updateReleaseInfo = async () => {
             try {
-                const releases = await fetchWithTimeout('releases.json');
-                const latestRelease = await fetchWithTimeout('latest-release.json');
-
-                // 最新ビルドの表示を更新
-                const latestBuildDiv = document.getElementById('latest-build');
-                const latestInfo = formatReleaseInfo(latestRelease);
-                if (latestInfo && !latestInfo.isStableRelease) {
-                    latestBuildDiv.innerHTML = `
-                        <div class="list-group">
-                            ${createReleaseCard(latestInfo)}
-                        </div>`;
-                } else {
-                    latestBuildDiv.innerHTML = '<p class="text-muted">最新ビルドの情報が見つかりませんでした。</p>';
-                }
+                const stableData = await fetchWithTimeout('stable.json');
+                const latestStable = stableData.latest;
 
                 // 安定版リリースの表示を更新
                 const stableReleaseDiv = document.getElementById('stable-release');
-                const stableReleases = releases
-                    .map(formatReleaseInfo)
-                    .filter(info => info && info.isStableRelease)
-                    .sort((a, b) => b.buildDate - a.buildDate);
-                
-                const latestStable = stableReleases[0];
                 if (latestStable) {
+                    const info = {
+                        name: latestStable.name,
+                        tag_name: `stable-${latestStable.commit_hash}`,
+                        version: latestStable.commit_hash,
+                        description: latestStable.body,
+                        releaseDate: new Date(latestStable.published_at).toLocaleDateString('ja-JP'),
+                        fileSize: latestStable.assets[0].size ? `${(latestStable.assets[0].size / (1024 * 1024)).toFixed(2)}MB` : '-',
+                        downloadUrl: latestStable.assets[0].browser_download_url,
+                        fileName: latestStable.assets[0].name,
+                        downloadCount: 0,
+                        isStableRelease: true,
+                        buildDate: new Date(latestStable.published_at)
+                    };
+
                     stableReleaseDiv.innerHTML = `
                         <div class="list-group">
-                            ${createReleaseCard(latestStable)}
+                            ${createReleaseCard(info)}
                         </div>`;
                 } else {
                     stableReleaseDiv.innerHTML = '<p class="text-muted">安定版リリースの情報が見つかりませんでした。</p>';
                 }
 
-                // リリース履歴の表示を更新
-                const releaseHistoryDiv = document.getElementById('release-history');
-                const releaseHistory = stableReleases.slice(1, 6); // 最新の安定版を除く過去5件
-
-                if (releaseHistory.length > 0) {
-                    releaseHistoryDiv.innerHTML = `
-                        <div class="list-group">
-                            ${releaseHistory.map(createReleaseCard).join('')}
-                        </div>`;
-                } else {
-                    releaseHistoryDiv.innerHTML = '<p class="text-muted">過去のリリース情報が見つかりませんでした。</p>';
-                }
+                // 最新ビルドとリリース履歴は一旦非表示
+                document.getElementById('latest-build').innerHTML = '<p class="text-muted">最新ビルドの情報は現在準備中です。</p>';
+                document.getElementById('release-history').innerHTML = '<p class="text-muted">過去のリリース情報は現在準備中です。</p>';
 
             } catch (error) {
                 console.error('リリース情報の更新に失敗しました:', error);

@@ -2,8 +2,8 @@ name: pages-deploy
 
 on:
   repository_dispatch:
-    types: [release_published, release_edited]  # hackCraft2からのリリースイベント
-  workflow_dispatch:  # 手動実行も可能に
+    types: [release_published, release_edited]  # hackCraft2からのイベント
+  workflow_dispatch:  # 手動実行用
 
 permissions:
   contents: read
@@ -17,9 +17,8 @@ concurrency:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+    environment: github-pages
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -36,6 +35,7 @@ jobs:
 
       - name: Create commit info JSON
         run: |
+          mkdir -p docs
           cat > docs/commit-info.json << EOF
           {
             "hash": "${{ steps.commit.outputs.commit_hash }}",
@@ -45,83 +45,45 @@ jobs:
           }
           EOF
 
-      - name: Get GitHub Releases
-        id: releases
-        uses: actions/github-script@v7
-        with:
-          script: |
-            // デバッグ情報の出力
-            console.log('Fetching releases...');
-            
-            const releases = await github.rest.repos.listReleases({
-              owner: '0x48lab',
-              repo: 'hackCraft2-public'
-            });
-            
-            console.log('Found releases:', releases.data.map(r => r.tag_name));
-            
-            // stable-* タグのリリースを探す
-            const stableReleases = releases.data
-              .filter(r => r.tag_name.startsWith('stable-'))
-              .sort((a, b) => {
-                const numA = parseInt(a.tag_name.split('-')[1]);
-                const numB = parseInt(b.tag_name.split('-')[1]);
-                return numB - numA; // 降順（新しい順）
-              });
+      - name: Install jq
+        run: sudo apt-get update && sudo apt-get install -y jq
 
-            const latestStable = stableReleases[0];
-            console.log('Latest stable release:', latestStable?.tag_name);
+      - name: Download latest stable.json from hackCraft2-public
+        run: |
+          echo "Fetching latest stable release..."
+          tag=$(curl -s https://api.github.com/repos/0x48lab/hackCraft2-public/releases \
+            | jq -r '[.[] | select(.tag_name | startswith("stable-"))] | sort_by(.published_at) | reverse | .[0].tag_name')
 
-            if (!latestStable) {
-              console.log('No stable releases found');
-              return;
-            }
+          echo "Latest stable tag: $tag"
 
-            // stable.jsonの内容を取得
-            const stableJsonResponse = await github.rest.repos.getReleaseAsset({
-              owner: '0x48lab',
-              repo: 'hackCraft2-public',
-              asset_id: latestStable.assets.find(a => a.name === 'stable.json').id
-            });
+          # ダウンロードと整形
+          curl -sL -o docs/stable_raw.json https://github.com/0x48lab/hackCraft2-public/releases/download/$tag/stable.json
 
-            const stableData = JSON.parse(Buffer.from(stableJsonResponse.data.content, 'base64').toString());
-            console.log('Stable data:', stableData);
-
-            // 表示用のデータを整形
-            const displayData = {
-              build_number: parseInt(latestStable.tag_name.split('-')[1]),
+          # 情報整形して stable.json に保存
+          jq -n \
+            --arg tag "$tag" \
+            --argjson raw "$(cat docs/stable_raw.json)" \
+            '{
+              build_number: ($tag | sub("stable-"; "") | tonumber),
               version: "develop",
-              release_date: latestStable.published_at,
-              download_url: `https://github.com/0x48lab/hackCraft2-public/releases/download/${latestStable.tag_name}/hackCraft2-all.jar`,
-              source_commit_hash: stableData.source_commit_hash,
-              public_commit_hash: stableData.public_commit_hash,
-              paper_version: stableData.paper_version,
-              release_tag: latestStable.tag_name
-            };
-            
-            // ファイルの保存
-            const fs = require('fs');
-            const stablePath = 'docs/stable.json';
-            
-            try {
-              // ディレクトリの存在確認
-              if (!fs.existsSync('docs')) {
-                console.log('Creating docs directory...');
-                fs.mkdirSync('docs', { recursive: true });
-              }
+              release_date: now | strftime("%Y-%m-%dT%H:%M:%SZ"),
+              download_url: "https://github.com/0x48lab/hackCraft2-public/releases/download/\($tag)/hackCraft2-all.jar",
+              source_commit_hash: $raw.source_commit_hash,
+              public_commit_hash: $raw.public_commit_hash,
+              paper_version: $raw.paper_version,
+              release_tag: $tag
+            }' > docs/stable.json
 
-              // ファイルの書き込み
-              fs.writeFileSync(stablePath, JSON.stringify(displayData, null, 2));
-              
-              // パーミッションの設定
-              fs.chmodSync(stablePath, 0o644);
-              
-              console.log('Successfully wrote stable data to:', stablePath);
-              console.log('stable.json content:', fs.readFileSync(stablePath, 'utf8'));
-            } catch (error) {
-              console.error('Error writing stable data:', error);
-              throw error;
-            }
+          rm docs/stable_raw.json
+
+      - name: Add cache control headers
+        run: |
+          cat > docs/_headers << EOF
+          /*
+            Cache-Control: no-cache, no-store, must-revalidate
+            Pragma: no-cache
+            Expires: 0
+          EOF
 
       - name: List generated files
         run: |
@@ -134,26 +96,11 @@ jobs:
         uses: actions/configure-pages@v4
         with:
           enablement: true
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Add cache control headers
-        run: |
-          cat > docs/_headers << EOF
-          /*
-            Cache-Control: no-cache, no-store, must-revalidate
-            Pragma: no-cache
-            Expires: 0
-          EOF
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: './docs'
-          retention-days: 1
 
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          path: './docs' 

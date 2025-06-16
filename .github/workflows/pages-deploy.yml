@@ -92,16 +92,16 @@ jobs:
             // 表示用のデータを整形
             const displayData = {
               latest: {
-                name: `Stable Build ${stableData.build_number}`,
-                published_at: stableData.release_date,
-                paper_version: stableData.paper_version,
-                commit_hash: latestStable.tag_name,  // stable-27 のようなタグ名
-                body: `Stable build from ${stableData.version}\n- Commit: ${stableData.commit_hash}\n- Build Number: ${stableData.build_number}\n- Paper Version: ${stableData.paper_version}`,
-                assets: [{
-                  name: latestStable.assets.find(a => a.name.endsWith('.jar')).name,
-                  size: latestStable.assets.find(a => a.name.endsWith('.jar')).size,
-                  browser_download_url: stableData.download_url
-                }]
+                name: stableData.latest.name,
+                published_at: stableData.latest.published_at,
+                paper_version: stableData.latest.paper_version,
+                commit_hash: latestStable.tag_name,  // hackCraft2-public のリリースタグを使用
+                body: stableData.latest.body,
+                assets: stableData.latest.assets.map(asset => ({
+                  name: asset.name,
+                  size: asset.size,
+                  browser_download_url: `https://github.com/0x48lab/hackCraft2-public/releases/download/${latestStable.tag_name}/${asset.name}`
+                }))
               }
             };
             
@@ -117,10 +117,10 @@ jobs:
               }
 
               // ファイルの書き込み
-              fs.writeFileSync(stablePath, JSON.stringify(displayData, null, 2));
+              fs.writeFileSync(stablePath, JSON.stringify(displayData, null, 4));
               
               // パーミッションの設定
-              fs.chmodSync(stablePath, '644');
+              fs.chmodSync(stablePath, 0o644);
               
               console.log('Successfully wrote stable data to:', stablePath);
               console.log('stable.json content:', fs.readFileSync(stablePath, 'utf8'));

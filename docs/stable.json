@@ -1,15 +1,15 @@
 {
     "latest": {
-        "name": "Stable Build 26",
-        "published_at": "2025-06-16T08:20:26Z",
+        "name": "Stable Build 27",
+        "published_at": "2025-06-16T10:28:19Z",
         "paper_version": "",
         "commit_hash": "71fe0cff281bdde37235a3702a2267aa9e4809e8",
-        "body": "Stable build from refs/heads/develop\n- Commit: 71fe0cff281bdde37235a3702a2267aa9e4809e8\n- Build Number: 26\n- Paper Version: ",
+        "body": "Stable build from refs/heads/develop\n- Commit: 71fe0cff281bdde37235a3702a2267aa9e4809e8\n- Build Number: 27\n- Paper Version: ",
         "assets": [
             {
-                "name": "hackcraft2-stable-20250616_082025.jar",
+                "name": "hackcraft2-stable-20250616_102818.jar",
                 "size": 182323708,
-                "browser_download_url": "downloads/latest/hackcraft2-stable-20250616_082025.jar"
+                "browser_download_url": "downloads/latest/hackcraft2-stable-20250616_102818.jar"
             }
         ]
     }

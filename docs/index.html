@@ -350,13 +350,13 @@
                 if (latestStable) {
                     const info = {
                         name: latestStable.name,
-                        tag_name: `stable-${latestStable.commit_hash}`,
-                        version: latestStable.commit_hash,
+                        tag_name: latestStable.commit_hash,  // stable-32 のようなタグ名
+                        version: latestStable.commit_hash.split('-')[1],  // 32 のような数字部分
                         description: latestStable.body,
                         releaseDate: new Date(latestStable.published_at).toLocaleDateString('ja-JP'),
                         fileSize: latestStable.assets[0].size ? `${(latestStable.assets[0].size / (1024 * 1024)).toFixed(2)}MB` : '-',
-                        // GitHub ReleasesのURLを使用
-                        downloadUrl: `https://github.com/0x48lab/hackCraft2/releases/download/stable-${latestStable.commit_hash}/${latestStable.assets[0].name}`,
+                        // GitHub ReleasesのURLをそのまま使用
+                        downloadUrl: latestStable.assets[0].browser_download_url,
                         fileName: latestStable.assets[0].name,
                         downloadCount: 0,
                         isStableRelease: false,  // 最新ビルドなので false

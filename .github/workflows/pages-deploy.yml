@@ -85,12 +85,12 @@ jobs:
                 name: latestStable.name,
                 published_at: latestStable.published_at,
                 paper_version: "",  // 必要に応じて設定
-                commit_hash: latestStable.tag_name.split('-')[1],  // stable-32 から 32 を取得
+                commit_hash: latestStable.tag_name,  // stable-32 のようなタグ名をそのまま使用
                 body: latestStable.body,
                 assets: latestStable.assets.map(asset => ({
                   name: asset.name,
                   size: asset.size,
-                  browser_download_url: asset.browser_download_url
+                  browser_download_url: asset.browser_download_url  // GitHub ReleasesのURLをそのまま使用
                 }))
               }
             };

@@ -62,51 +62,60 @@ jobs:
             
             console.log('Found releases:', releases.data.map(r => r.tag_name));
             
-            const releaseData = releases.data.map(release => ({
-              tag_name: release.tag_name,
-              name: release.name,
-              published_at: release.published_at,
-              body: release.body,
-              assets: release.assets.map(asset => ({
-                name: asset.name,
-                size: asset.size,
-                download_count: asset.download_count,
-                browser_download_url: asset.browser_download_url
-              }))
-            }));
-
-            // リリースを分類
-            const stableReleases = releaseData.filter(r => r.tag_name.startsWith('stable-'))
+            // stable-* タグのリリースを探す
+            const stableReleases = releases.data
+              .filter(r => r.tag_name.startsWith('stable-'))
               .sort((a, b) => {
                 const numA = parseInt(a.tag_name.split('-')[1]);
                 const numB = parseInt(b.tag_name.split('-')[1]);
                 return numB - numA; // 降順（新しい順）
               });
 
-            // 最新のstableリリース
             const latestStable = stableReleases[0];
             console.log('Latest stable release:', latestStable?.tag_name);
+
+            if (!latestStable) {
+              console.log('No stable releases found');
+              return;
+            }
+
+            // stable.jsonの形式に合わせてデータを整形
+            const stableData = {
+              latest: {
+                name: latestStable.name,
+                published_at: latestStable.published_at,
+                paper_version: "",  // 必要に応じて設定
+                commit_hash: latestStable.tag_name.split('-')[1],  // stable-32 から 32 を取得
+                body: latestStable.body,
+                assets: latestStable.assets.map(asset => ({
+                  name: asset.name,
+                  size: asset.size,
+                  browser_download_url: asset.browser_download_url
+                }))
+              }
+            };
             
-            // リリース情報をJSONファイルとして保存
+            // ファイルの保存
             const fs = require('fs');
-            const releasesPath = 'docs/releases.json';
-            const latestPath = 'docs/latest-release.json';
+            const stablePath = 'docs/stable.json';
             
             try {
-              fs.writeFileSync(releasesPath, JSON.stringify(releaseData, null, 2));
-              fs.writeFileSync(latestPath, JSON.stringify(latestStable, null, 2));
-              console.log('Successfully wrote release data to:', releasesPath, 'and', latestPath);
-              
-              // ファイルが実際に作成されたか確認
-              if (fs.existsSync(releasesPath) && fs.existsSync(latestPath)) {
-                console.log('Files exist after writing');
-                console.log('releases.json size:', fs.statSync(releasesPath).size);
-                console.log('latest-release.json size:', fs.statSync(latestPath).size);
-              } else {
-                console.log('Error: Files do not exist after writing');
+              // ディレクトリの存在確認
+              if (!fs.existsSync('docs')) {
+                console.log('Creating docs directory...');
+                fs.mkdirSync('docs', { recursive: true });
               }
+
+              // ファイルの書き込み
+              fs.writeFileSync(stablePath, JSON.stringify(stableData, null, 2));
+              
+              // パーミッションの設定
+              fs.chmodSync(stablePath, '644');
+              
+              console.log('Successfully wrote stable data to:', stablePath);
+              console.log('stable.json content:', fs.readFileSync(stablePath, 'utf8'));
             } catch (error) {
-              console.error('Error writing release data:', error);
+              console.error('Error writing stable data:', error);
               throw error;
             }
 
@@ -114,13 +123,14 @@ jobs:
         run: |
           echo "Contents of docs directory:"
           ls -la docs/
-          echo "\nContents of releases.json:"
-          cat docs/releases.json
-          echo "\nContents of latest-release.json:"
-          cat docs/latest-release.json
+          echo "\nContents of stable.json:"
+          cat docs/stable.json
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
+        with:
+          enablement: true
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Add cache control headers
         run: |
@@ -135,7 +145,11 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: './docs'
+          retention-days: 1
 
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4 
+        uses: actions/deploy-pages@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: './docs' 

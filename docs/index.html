@@ -345,8 +345,8 @@
                 const stableData = await fetchWithTimeout('stable.json');
                 const latestStable = stableData.latest;
 
-                // 安定版リリースの表示を更新
-                const stableReleaseDiv = document.getElementById('stable-release');
+                // 最新ビルド（stable）の表示を更新
+                const latestBuildDiv = document.getElementById('latest-build');
                 if (latestStable) {
                     const info = {
                         name: latestStable.name,
@@ -355,23 +355,27 @@
                         description: latestStable.body,
                         releaseDate: new Date(latestStable.published_at).toLocaleDateString('ja-JP'),
                         fileSize: latestStable.assets[0].size ? `${(latestStable.assets[0].size / (1024 * 1024)).toFixed(2)}MB` : '-',
-                        downloadUrl: latestStable.assets[0].browser_download_url,
+                        // GitHub ReleasesのURLを使用
+                        downloadUrl: `https://github.com/0x48lab/hackCraft2/releases/download/stable-${latestStable.commit_hash}/${latestStable.assets[0].name}`,
                         fileName: latestStable.assets[0].name,
                         downloadCount: 0,
-                        isStableRelease: true,
+                        isStableRelease: false,  // 最新ビルドなので false
                         buildDate: new Date(latestStable.published_at)
                     };
 
-                    stableReleaseDiv.innerHTML = `
+                    latestBuildDiv.innerHTML = `
                         <div class="list-group">
                             ${createReleaseCard(info)}
                         </div>`;
                 } else {
-                    stableReleaseDiv.innerHTML = '<p class="text-muted">安定版リリースの情報が見つかりませんでした。</p>';
+                    latestBuildDiv.innerHTML = '<p class="text-muted">最新ビルドの情報が見つかりませんでした。</p>';
                 }
 
-                // 最新ビルドとリリース履歴は一旦非表示
-                document.getElementById('latest-build').innerHTML = '<p class="text-muted">最新ビルドの情報は現在準備中です。</p>';
+                // 安定版リリース（release）の表示を更新
+                const stableReleaseDiv = document.getElementById('stable-release');
+                stableReleaseDiv.innerHTML = '<p class="text-muted">安定版リリースの情報は現在準備中です。</p>';
+
+                // リリース履歴は一旦非表示
                 document.getElementById('release-history').innerHTML = '<p class="text-muted">過去のリリース情報は現在準備中です。</p>';
 
             } catch (error) {

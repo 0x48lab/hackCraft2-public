@@ -3,94 +3,57 @@ name: Generate Release Lists
 on:
   push:
     paths:
-      - 'downloads/**'
-      - '.github/workflows/generate-release-lists.yml'
+      - 'docs/release.json'
   workflow_dispatch:
 
 jobs:
-  generate-lists:
+  generate-release-lists:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.HACKCRAFT2_PAT }}  # hackCraft2リポジトリ用のPAT
+      TARGET_REPO: "masafumi-t/hackCraft2"  # 対象リポジトリ
     steps:
       - uses: actions/checkout@v4
 
-      - name: Generate Stable List
+      - name: Copy release.json to downloads
         run: |
-          # 安定版の一覧を生成
-          echo "{" > stable-list.json
-          echo "  \"releases\": [" >> stable-list.json
+          # release.jsonの内容を読み込む
+          RELEASE_JSON=$(cat docs/release.json)
+          JAR_FILENAME=$(echo "$RELEASE_JSON" | jq -r '.latest.assets[0].name')
           
-          # downloads/latest/ディレクトリ内のjarファイルを検索
-          if [ -d "docs/downloads/latest" ]; then
-            files=$(find docs/downloads/latest -name "*.jar" -type f)
-            first=true
-            for file in $files; do
-              if [ "$first" = true ]; then
-                first=false
-              else
-                echo "," >> stable-list.json
-              fi
-              
-              filename=$(basename "$file")
-              size=$(stat -c%s "$file")
-              date=$(stat -c%y "$file" | date -u +"%Y-%m-%dT%H:%M:%SZ")
-              
-              echo "    {" >> stable-list.json
-              echo "      \"name\": \"$filename\"," >> stable-list.json
-              echo "      \"url\": \"downloads/latest/$filename\"," >> stable-list.json
-              echo "      \"size\": $size," >> stable-list.json
-              echo "      \"published_at\": \"$date\"" >> stable-list.json
-              echo "    }" >> stable-list.json
-            done
-          fi
-          
-          echo "  ]" >> stable-list.json
-          echo "}" >> stable-list.json
-          
-          # 生成したJSONをdocsディレクトリに移動
-          mv stable-list.json docs/stable-list.json
+          # 同名のJSONファイルを作成
+          cp docs/release.json "docs/downloads/releases/${JAR_FILENAME%.jar}.json"
 
-      - name: Generate Release List
+      - name: Update release-list.json
         run: |
-          # リリース版の一覧を生成
-          echo "{" > release-list.json
-          echo "  \"releases\": [" >> release-list.json
-          
-          # downloads/releases/ディレクトリ内のjarファイルを検索
-          if [ -d "docs/downloads/releases" ]; then
-            files=$(find docs/downloads/releases -name "*.jar" -type f)
-            first=true
-            for file in $files; do
-              if [ "$first" = true ]; then
-                first=false
-              else
-                echo "," >> release-list.json
-              fi
-              
-              filename=$(basename "$file")
-              size=$(stat -c%s "$file")
-              date=$(stat -c%y "$file" | date -u +"%Y-%m-%dT%H:%M:%SZ")
-              version=$(echo "$filename" | grep -o "R[0-9]\+-[a-z0-9]\+" || echo "")
-              
-              echo "    {" >> release-list.json
-              echo "      \"name\": \"$filename\"," >> release-list.json
-              echo "      \"url\": \"downloads/releases/$filename\"," >> release-list.json
-              echo "      \"size\": $size," >> release-list.json
-              echo "      \"version\": \"$version\"," >> release-list.json
-              echo "      \"published_at\": \"$date\"" >> release-list.json
-              echo "    }" >> release-list.json
-            done
+          # 既存のrelease-list.jsonを読み込む
+          if [ -f "docs/release-list.json" ]; then
+            cp docs/release-list.json release-list.json
+          else
+            echo '{"releases": []}' > release-list.json
           fi
           
-          echo "  ]" >> release-list.json
-          echo "}" >> release-list.json
+          # 最新のrelease.jsonの内容を取得
+          RELEASE_JSON=$(cat docs/release.json)
+          JAR_FILENAME=$(echo "$RELEASE_JSON" | jq -r '.latest.assets[0].name')
+          JSON_FILENAME="${JAR_FILENAME%.jar}.json"
+          SIZE=$(echo "$RELEASE_JSON" | jq -r '.latest.assets[0].size')
+          DATE=$(echo "$RELEASE_JSON" | jq -r '.latest.published_at')
+          VERSION=$(echo "$JAR_FILENAME" | grep -o "R[0-9]\+-[a-z0-9]\+" || echo "")
           
-          # 生成したJSONをdocsディレクトリに移動
-          mv release-list.json docs/release-list.json
+          # 新しいエントリを追加
+          jq --arg name "$JSON_FILENAME" \
+             --arg url "downloads/releases/$JSON_FILENAME" \
+             --arg size "$SIZE" \
+             --arg date "$DATE" \
+             --arg version "$VERSION" \
+             '.releases += [{"name": $name, "url": $url, "size": ($size|tonumber), "version": $version, "published_at": $date}]' \
+             release-list.json > docs/release-list.json
 
       - name: Commit and Push Changes
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add docs/stable-list.json docs/release-list.json
-          git commit -m "Update release lists" || exit 0
+          git add docs/release-list.json "docs/downloads/releases/*.json"
+          git commit -m "Update release lists and JSON files" || exit 0
           git push 

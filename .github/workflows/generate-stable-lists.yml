@@ -1,0 +1,57 @@
+name: Generate Stable Lists
+
+on:
+  push:
+    paths:
+      - 'docs/stable.json'
+  workflow_dispatch:
+
+jobs:
+  generate-stable-lists:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.HACKCRAFT2_PAT }}  # hackCraft2リポジトリ用のPAT
+      TARGET_REPO: "masafumi-t/hackCraft2"  # 対象リポジトリ
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Copy stable.json to downloads
+        run: |
+          # stable.jsonの内容を読み込む
+          STABLE_JSON=$(cat docs/stable.json)
+          JAR_FILENAME=$(echo "$STABLE_JSON" | jq -r '.latest.assets[0].name')
+          
+          # 同名のJSONファイルを作成
+          cp docs/stable.json "docs/downloads/latest/${JAR_FILENAME%.jar}.json"
+
+      - name: Update stable-list.json
+        run: |
+          # 既存のstable-list.jsonを読み込む
+          if [ -f "docs/stable-list.json" ]; then
+            cp docs/stable-list.json stable-list.json
+          else
+            echo '{"releases": []}' > stable-list.json
+          fi
+          
+          # 最新のstable.jsonの内容を取得
+          STABLE_JSON=$(cat docs/stable.json)
+          JAR_FILENAME=$(echo "$STABLE_JSON" | jq -r '.latest.assets[0].name')
+          JSON_FILENAME="${JAR_FILENAME%.jar}.json"
+          SIZE=$(echo "$STABLE_JSON" | jq -r '.latest.assets[0].size')
+          DATE=$(echo "$STABLE_JSON" | jq -r '.latest.published_at')
+          
+          # 新しいエントリを追加
+          jq --arg name "$JSON_FILENAME" \
+             --arg url "downloads/latest/$JSON_FILENAME" \
+             --arg size "$SIZE" \
+             --arg date "$DATE" \
+             '.releases += [{"name": $name, "url": $url, "size": ($size|tonumber), "published_at": $date}]' \
+             stable-list.json > docs/stable-list.json
+
+      - name: Commit and Push Changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add docs/stable-list.json "docs/downloads/latest/*.json"
+          git commit -m "Update stable lists and JSON files" || exit 0
+          git push 

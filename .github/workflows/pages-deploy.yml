@@ -56,8 +56,8 @@ jobs:
             console.log('Fetching releases...');
             
             const releases = await github.rest.repos.listReleases({
-              owner: '0x48lab',  // hackCraft2のオーナー
-              repo: 'hackCraft2'  // hackCraft2のリポジトリ名
+              owner: '0x48lab',
+              repo: 'hackCraft2-public'
             });
             
             console.log('Found releases:', releases.data.map(r => r.tag_name));
@@ -91,18 +91,14 @@ jobs:
 
             // 表示用のデータを整形
             const displayData = {
-              latest: {
-                name: stableData.latest.name,
-                published_at: stableData.latest.published_at,
-                paper_version: stableData.latest.paper_version,
-                commit_hash: latestStable.tag_name,  // hackCraft2-public のリリースタグを使用
-                body: stableData.latest.body,
-                assets: stableData.latest.assets.map(asset => ({
-                  name: asset.name,
-                  size: asset.size,
-                  browser_download_url: `https://github.com/0x48lab/hackCraft2-public/releases/download/${latestStable.tag_name}/${asset.name}`
-                }))
-              }
+              build_number: parseInt(latestStable.tag_name.split('-')[1]),
+              version: "develop",
+              release_date: latestStable.published_at,
+              download_url: `https://github.com/0x48lab/hackCraft2-public/releases/download/${latestStable.tag_name}/hackCraft2-all.jar`,
+              source_commit_hash: stableData.source_commit_hash,
+              public_commit_hash: stableData.public_commit_hash,
+              paper_version: stableData.paper_version,
+              release_tag: latestStable.tag_name
             };
             
             // ファイルの保存
@@ -117,7 +113,7 @@ jobs:
               }
 
               // ファイルの書き込み
-              fs.writeFileSync(stablePath, JSON.stringify(displayData, null, 4));
+              fs.writeFileSync(stablePath, JSON.stringify(displayData, null, 2));
               
               // パーミッションの設定
               fs.chmodSync(stablePath, 0o644);

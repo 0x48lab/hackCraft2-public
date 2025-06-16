@@ -26,6 +26,27 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 全履歴を取得
+
+      - name: Get commit information
+        id: commit
+        run: |
+          echo "commit_hash=$(git rev-parse HEAD)" >> $GITHUB_OUTPUT
+          echo "commit_date=$(git log -1 --format=%cd --date=format:'%Y/%m/%d')" >> $GITHUB_OUTPUT
+          echo "commit_message=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+          echo "commit_author=$(git log -1 --pretty=%an)" >> $GITHUB_OUTPUT
+
+      - name: Create commit info JSON
+        run: |
+          cat > docs/commit-info.json << EOF
+          {
+            "hash": "${{ steps.commit.outputs.commit_hash }}",
+            "date": "${{ steps.commit.outputs.commit_date }}",
+            "message": "${{ steps.commit.outputs.commit_message }}",
+            "author": "${{ steps.commit.outputs.commit_author }}"
+          }
+          EOF
 
       - name: Setup Pages
         uses: actions/configure-pages@v4

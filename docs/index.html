@@ -249,7 +249,7 @@
                     }
                     return response.json();
                 }),
-                new Promise((_, reject) => 
+                new Promise((_, reject) =>
                     setTimeout(() => reject(new Error(`${url}の取得がタイムアウトしました`)), timeout)
                 )
             ]);
@@ -337,6 +337,45 @@
                 div.innerHTML = `<p class="text-danger"><i class="bi bi-exclamation-triangle"></i> ${error.message || '情報の表示に失敗しました'}</p>`;
             }
         };
+
+        // コミット情報を取得して表示
+        const displayCommitInfo = async () => {
+            try {
+                const commitInfo = await fetchWithTimeout('commit-info.json');
+                const stableReleaseDiv = document.getElementById('stable-release');
+                
+                const commitDate = new Date(commitInfo.date);
+                const formattedDate = commitDate.toLocaleDateString('ja-JP', {
+                    year: 'numeric',
+                    month: 'numeric',
+                    day: 'numeric'
+                });
+
+                stableReleaseDiv.innerHTML = `
+                    <div class="mb-3">
+                        <h6>Stable Build ${commitInfo.hash.substring(0, 7)}</h6>
+                        <p class="mb-1">${commitInfo.message}</p>
+                        <p class="text-muted small mb-2">
+                            <i class="bi bi-person"></i> ${commitInfo.author} - ${formattedDate}
+                        </p>
+                        <a href="https://github.com/masafumi-t/hackCraft2-public/commit/${commitInfo.hash}" 
+                           target="_blank" class="btn btn-primary btn-sm">
+                            <i class="bi bi-download"></i> ダウンロード
+                        </a>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('コミット情報の取得に失敗しました:', error);
+                document.getElementById('stable-release').innerHTML = `
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i> リリース情報の取得に失敗しました
+                    </div>
+                `;
+            }
+        };
+
+        // ページ読み込み時にコミット情報を表示
+        document.addEventListener('DOMContentLoaded', displayCommitInfo);
 
         // 各ファイルを個別に取得して表示
         Promise.allSettled([

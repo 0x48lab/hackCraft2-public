@@ -335,6 +335,7 @@
                             <p class="mb-1 small text-muted">
                                 ビルド番号: ${buildNumber} | バージョン: ${version}
                             </p>
+                            ${buildInfo.paper_version ? `<p class="mb-1 small text-muted">Paper: ${buildInfo.paper_version}</p>` : ''}
                             ${buildInfo.body ? `<p class="mb-1 small text-muted">${buildInfo.body.split('\n')[0]}</p>` : ''}
                             ${commitHash ? `<p class="mb-1 small text-muted">コミット: <code>${commitHash.substring(0, 8)}</code></p>` : ''}
                         </div>
@@ -505,7 +506,7 @@
             } catch (error) {
                 console.log('コミット情報ファイルが見つかりません:', error);
                 
-                // フォールバック: コミットハッシュのみを表示
+                // フォールバック: GitHubのコミットページへのリンクを提供
                 return {
                     commit: {
                         message: `コミット ${commitHash.substring(0, 8)}`,
@@ -513,7 +514,9 @@
                             name: 'hackCraft2',
                             date: new Date().toISOString()
                         }
-                    }
+                    },
+                    html_url: `https://github.com/0x48lab/hackCraft2-public/commit/${commitHash}`,
+                    isFallback: true
                 };
             }
         };
@@ -572,9 +575,21 @@
                 const commitInfo = await fetchCommitInfo(commitHash);
                 
                 if (commitInfo && commitInfo.commit) {
-                    // 変更ログを生成して表示
-                    const changelog = generateChangelog(commitInfo);
-                    container.innerHTML = changelog;
+                    // フォールバックの場合（ローカルファイルが見つからない場合）
+                    if (commitInfo.isFallback) {
+                        container.innerHTML = `
+                            <div class="alert alert-info">
+                                <i class="bi bi-info-circle"></i> このコミットの詳細情報は現在利用できません。
+                                <br><small>コミットハッシュ: <code>${commitHash.substring(0, 8)}</code></small>
+                                <br><a href="${commitInfo.html_url}" target="_blank" class="btn btn-outline-primary btn-sm mt-2">
+                                    <i class="bi bi-github"></i> GitHubで詳細を確認
+                                </a>
+                            </div>`;
+                    } else {
+                        // 変更ログを生成して表示
+                        const changelog = generateChangelog(commitInfo);
+                        container.innerHTML = changelog;
+                    }
                 } else {
                     container.innerHTML = `
                         <div class="alert alert-info">

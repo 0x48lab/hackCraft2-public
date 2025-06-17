@@ -363,10 +363,10 @@
                 
                 const pastBuilds = [];
                 
-                // 過去のビルド情報を取得（現在のビルド番号から逆順で取得）
+                // stablesディレクトリから過去のビルド情報を取得（現在のビルド番号から逆順で取得）
                 for (let i = currentBuildNumber - 1; i >= Math.max(1, currentBuildNumber - 10); i--) {
                     try {
-                        const buildData = await fetchWithTimeout(`downloads/latest/stable-${i}.json`);
+                        const buildData = await fetchWithTimeout(`stables/stable-${i}.json`);
                         if (buildData) {
                             pastBuilds.push(buildData);
                         }

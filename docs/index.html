@@ -307,24 +307,30 @@
 
             return `
                 <div class="list-group-item">
-                    <div class="d-flex w-100 justify-content-between align-items-center">
-                        <div>
-                            <h6 class="mb-1">
+                    <div class="d-flex w-100 justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <h6 class="mb-2">
                                 ${buildInfo.name || `Build ${buildNumber}`}
                                 <span class="badge ${badgeClass} ms-2">${badgeText}</span>
                             </h6>
-                            <p class="mb-1 small text-muted">
-                                ビルド番号: ${buildNumber} | バージョン: ${version}
-                            </p>
-                            ${buildInfo.paper_version ? `<p class="mb-1 small text-muted">Paperバージョン: ${buildInfo.paper_version}</p>` : ''}
-                            ${buildInfo.body ? `<p class="mb-1 small text-muted">${buildInfo.body.split('\n')[0]}</p>` : ''}
-                            ${commitHash ? `<p class="mb-1 small text-muted">コミット: <code>${commitHash.substring(0, 8)}</code></p>` : ''}
+                            <div class="mb-2">
+                                <p class="mb-1 small text-muted">
+                                    <strong>ビルド番号:</strong> ${buildNumber}
+                                </p>
+                                ${buildInfo.jar_filename ? `<p class="mb-1 small text-muted"><strong>ファイル名:</strong> ${buildInfo.jar_filename}</p>` : ''}
+                                ${buildInfo.paper_version ? `<p class="mb-1 small text-muted"><strong>Paperバージョン:</strong> ${buildInfo.paper_version}</p>` : ''}
+                                ${buildInfo.body ? `<p class="mb-1 small text-muted">${buildInfo.body.split('\n')[0]}</p>` : ''}
+                            </div>
                         </div>
-                        <small class="text-muted">${releaseDate}</small>
+                        <div class="text-end ms-3">
+                            <small class="text-muted">
+                                <strong>ビルド日時:</strong> ${releaseDate}
+                            </small>
+                        </div>
                     </div>
-                    <div class="d-flex justify-content-between align-items-center mt-2">
+                    <div class="d-flex justify-content-between align-items-center mt-3">
                         <div>
-                            <small class="text-muted">${fileSize}</small>
+                            <small class="text-muted"><strong>ファイルサイズ:</strong> ${fileSize}</small>
                         </div>
                         <div>
                             ${showReleaseLink ? `

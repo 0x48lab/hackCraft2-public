@@ -301,10 +301,10 @@
             const badgeClass = isStable ? 'bg-success' : 'bg-warning';
             const badgeText = isStable ? '安定版' : '最新ビルド';
             
-            // 現在のstable.jsonフォーマットに対応
+            // 新しいstable.jsonフォーマットに対応
             const downloadUrl = buildInfo.download_url || buildInfo.assets?.[0]?.browser_download_url;
-            const fileName = buildInfo.assets?.[0]?.name || 'hackCraft2.jar';
-            const fileSize = formatFileSize(buildInfo.assets?.[0]?.size);
+            const fileName = buildInfo.jar_filename || buildInfo.assets?.[0]?.name || 'hackCraft2.jar';
+            const fileSize = formatFileSize(buildInfo.jar_size || buildInfo.assets?.[0]?.size);
             const releaseDate = formatDate(buildInfo.release_date || buildInfo.published_at);
             
             // ビルド番号とバージョンの取得
@@ -374,10 +374,11 @@
                 const stableData = await fetchWithTimeout('stable.json');
                 let currentBuildNumber = 0;
                 
-                // 現在のstable.jsonフォーマットに対応
+                // 新しいstable.jsonフォーマットに対応
                 if (stableData.build_number) {
                     currentBuildNumber = stableData.build_number;
                 } else if (stableData.latest?.commit_hash) {
+                    // 古いフォーマット（latestプロパティがある場合）
                     const hashParts = stableData.latest.commit_hash.split('-');
                     currentBuildNumber = parseInt(hashParts[1]) || 0;
                 }
@@ -412,12 +413,13 @@
                 // 最新ビルドの表示を更新
                 const latestBuildDiv = document.getElementById('latest-build');
                 if (stableData.latest) {
+                    // 古いフォーマット（latestプロパティがある場合）
                     latestBuildDiv.innerHTML = `
                         <div class="list-group">
                             ${createBuildCard(stableData.latest, false)}
                         </div>`;
                 } else if (stableData.build_number) {
-                    // 新しいフォーマットの場合
+                    // 新しいフォーマット（直接プロパティがある場合）
                     latestBuildDiv.innerHTML = `
                         <div class="list-group">
                             ${createBuildCard(stableData, false)}
@@ -431,12 +433,13 @@
                 try {
                     const releaseData = await fetchWithTimeout('release.json');
                     if (releaseData && releaseData.latest) {
+                        // 古いフォーマット（latestプロパティがある場合）
                         stableReleaseDiv.innerHTML = `
                             <div class="list-group">
                                 ${createBuildCard(releaseData.latest, true)}
                             </div>`;
                     } else if (releaseData && releaseData.build_number) {
-                        // 新しいフォーマットの場合
+                        // 新しいフォーマット（直接プロパティがある場合）
                         stableReleaseDiv.innerHTML = `
                             <div class="list-group">
                                 ${createBuildCard(releaseData, true)}
@@ -493,16 +496,25 @@
             setInterval(updateReleaseInfo, 300000);
         });
 
-        // GitHub APIからコミット情報を取得
+        // コミット情報を取得（ローカルJSONファイルから）
         const fetchCommitInfo = async (commitHash) => {
             try {
-                const response = await fetchWithTimeout(
-                    `https://api.github.com/repos/0x48lab/hackCraft2-public/commits/${commitHash}`
-                );
+                // コミット情報をローカルJSONファイルから取得
+                const response = await fetchWithTimeout(`commits/${commitHash}.json`);
                 return response;
             } catch (error) {
-                console.error('コミット情報の取得に失敗:', error);
-                return null;
+                console.log('コミット情報ファイルが見つかりません:', error);
+                
+                // フォールバック: コミットハッシュのみを表示
+                return {
+                    commit: {
+                        message: `コミット ${commitHash.substring(0, 8)}`,
+                        author: {
+                            name: 'hackCraft2',
+                            date: new Date().toISOString()
+                        }
+                    }
+                };
             }
         };
 
@@ -556,24 +568,26 @@
                 // コンテナを表示
                 container.style.display = 'block';
 
-                // GitHub APIからコミット情報を取得
+                // コミット情報を取得
                 const commitInfo = await fetchCommitInfo(commitHash);
                 
-                if (commitInfo) {
+                if (commitInfo && commitInfo.commit) {
                     // 変更ログを生成して表示
                     const changelog = generateChangelog(commitInfo);
                     container.innerHTML = changelog;
                 } else {
                     container.innerHTML = `
-                        <div class="alert alert-warning">
-                            <i class="bi bi-exclamation-triangle"></i> 変更ログの取得に失敗しました
+                        <div class="alert alert-info">
+                            <i class="bi bi-info-circle"></i> このコミットの詳細情報は現在利用できません。
+                            <br><small>コミットハッシュ: <code>${commitHash.substring(0, 8)}</code></small>
                         </div>`;
                 }
             } catch (error) {
                 console.error('変更ログの表示に失敗:', error);
                 container.innerHTML = `
-                    <div class="alert alert-danger">
+                    <div class="alert alert-warning">
                         <i class="bi bi-exclamation-triangle"></i> 変更ログの表示に失敗しました
+                        <br><small>コミットハッシュ: <code>${commitHash.substring(0, 8)}</code></small>
                     </div>`;
             } finally {
                 // ボタンを元の状態に戻す

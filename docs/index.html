@@ -497,27 +497,78 @@
             setInterval(updateReleaseInfo, 300000);
         });
 
-        // コミット情報を取得（ローカルJSONファイルから）
+        // コミット情報を取得（ローカルリリース情報から）
         const fetchCommitInfo = async (commitHash) => {
             try {
-                // コミット情報をローカルJSONファイルから取得
-                const response = await fetchWithTimeout(`commits/${commitHash}.json`);
-                return response;
+                // まず、stable.jsonからリリースタグを取得
+                const stableData = await fetchWithTimeout('stable.json');
+                let releaseTag = null;
+                
+                if (stableData.release_tag) {
+                    releaseTag = stableData.release_tag;
+                } else if (stableData.latest?.release_tag) {
+                    releaseTag = stableData.latest.release_tag;
+                }
+                
+                if (releaseTag) {
+                    try {
+                        // ローカルのリリース情報ファイルから取得
+                        const releaseResponse = await fetchWithTimeout(`releases/${releaseTag}.json`);
+                        if (releaseResponse && releaseResponse.body) {
+                            return {
+                                commit: {
+                                    message: `リリース ${releaseTag}`,
+                                    author: {
+                                        name: releaseResponse.author?.login || 'hackCraft2',
+                                        date: releaseResponse.published_at || new Date().toISOString()
+                                    }
+                                },
+                                body: releaseResponse.body,
+                                html_url: releaseResponse.html_url || `https://github.com/0x48lab/hackCraft2-public/releases/tag/${releaseTag}`,
+                                isRelease: true
+                            };
+                        }
+                    } catch (error) {
+                        console.log('ローカルリリース情報ファイルが見つかりません:', error);
+                    }
+                }
+                
+                // フォールバック: ローカルJSONファイルから取得
+                const localResponse = await fetchWithTimeout(`commits/${commitHash}.json`);
+                return localResponse;
             } catch (error) {
                 console.log('コミット情報ファイルが見つかりません:', error);
                 
-                // フォールバック: GitHubのコミットページへのリンクを提供
-                return {
-                    commit: {
-                        message: `コミット ${commitHash.substring(0, 8)}`,
-                        author: {
-                            name: 'hackCraft2',
-                            date: new Date().toISOString()
-                        }
-                    },
-                    html_url: `https://github.com/0x48lab/hackCraft2-public/commit/${commitHash}`,
-                    isFallback: true
-                };
+                // フォールバック: GitHubのリリースページへのリンクを提供
+                const stableData = await fetchWithTimeout('stable.json').catch(() => null);
+                const releaseTag = stableData?.release_tag || stableData?.latest?.release_tag;
+                
+                if (releaseTag) {
+                    return {
+                        commit: {
+                            message: `リリース ${releaseTag}`,
+                            author: {
+                                name: 'hackCraft2',
+                                date: new Date().toISOString()
+                            }
+                        },
+                        html_url: `https://github.com/0x48lab/hackCraft2-public/releases/tag/${releaseTag}`,
+                        isFallback: true,
+                        isRelease: true
+                    };
+                } else {
+                    return {
+                        commit: {
+                            message: `コミット ${commitHash.substring(0, 8)}`,
+                            author: {
+                                name: 'hackCraft2',
+                                date: new Date().toISOString()
+                            }
+                        },
+                        html_url: `https://github.com/0x48lab/hackCraft2-public/commit/${commitHash}`,
+                        isFallback: true
+                    };
+                }
             }
         };
 
@@ -531,7 +582,40 @@
             const author = commitInfo.commit.author.name;
             const date = new Date(commitInfo.commit.author.date).toLocaleDateString('ja-JP');
             
-            // コミットメッセージを行ごとに分割
+            // リリース情報の場合
+            if (commitInfo.isRelease && commitInfo.body) {
+                let changelog = `
+                    <div class="changelog">
+                        <h6 class="mb-2">${message}</h6>
+                        <div class="small text-muted mb-2">
+                            <i class="bi bi-person"></i> ${author} | 
+                            <i class="bi bi-calendar"></i> ${date}
+                        </div>
+                        <div class="changelog-details">
+                            <div class="mb-2">
+                                <a href="${commitInfo.html_url}" target="_blank" class="btn btn-outline-primary btn-sm">
+                                    <i class="bi bi-github"></i> GitHubで詳細を確認
+                                </a>
+                            </div>
+                            <div class="release-body">
+                                ${commitInfo.body.split('\n').map(line => {
+                                    if (line.startsWith('* ')) {
+                                        return `<p class="mb-1 small"><i class="bi bi-check-circle text-success"></i> ${line.substring(2)}</p>`;
+                                    } else if (line.startsWith('### ')) {
+                                        return `<h6 class="mt-3 mb-2">${line.substring(4)}</h6>`;
+                                    } else if (line.trim()) {
+                                        return `<p class="mb-1 small">${line}</p>`;
+                                    } else {
+                                        return '';
+                                    }
+                                }).join('')}
+                            </div>
+                        </div>
+                    </div>`;
+                return changelog;
+            }
+            
+            // 通常のコミット情報の場合
             const lines = message.split('\n').filter(line => line.trim());
             const title = lines[0];
             const details = lines.slice(1);
@@ -585,8 +669,12 @@
                                     <i class="bi bi-github"></i> GitHubで詳細を確認
                                 </a>
                             </div>`;
+                    } else if (commitInfo.isRelease) {
+                        // リリース情報の場合
+                        const changelog = generateChangelog(commitInfo);
+                        container.innerHTML = changelog;
                     } else {
-                        // 変更ログを生成して表示
+                        // 通常のコミット情報の場合
                         const changelog = generateChangelog(commitInfo);
                         container.innerHTML = changelog;
                     }

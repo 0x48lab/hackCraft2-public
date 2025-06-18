@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- キャッシュ制御を強化 -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <!-- 自動更新 -->
+    <meta http-equiv="refresh" content="300">
+    <title>ビジュアルプログラミング - hackCraft2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        .feature-card {
+            margin-bottom: 2rem;
+            transition: transform 0.3s;
+            border: none;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+        .block-example {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-left: 4px solid #007bff;
+        }
+        .code-block {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+        }
+        .step-number {
+            background-color: #007bff;
+            color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .tutorial-section {
+            background-color: #f8f9fa;
+            padding: 2rem 0;
+            margin: 2rem 0;
+        }
+        .block-category {
+            background-color: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .block-category h5 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 0.5rem;
+        }
+        .screenshot-container {
+            text-align: center;
+            margin: 2rem 0;
+            padding: 1rem;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .screenshot-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .extension-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">hackCraft2</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">ホーム</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="visual-programming.html">ビジュアルプログラミング</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="3d-view.html">3Dビュー</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="code-editor.html">コードエディタ</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#getting-started">始め方</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="container text-center">
+            <h1 class="display-4">ビジュアルプログラミング</h1>
+            <p class="lead">Scratch3ベースの拡張エクステンションでMinecraftをプログラミング</p>
+            <p>50個のブロックでMinecraftの動物を操作し、イベントを取得してプログラミングを楽しもう</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 概要セクション -->
+        <section class="mb-5">
+            <div class="row">
+                <div class="col-md-8">
+                    <h2><i class="bi bi-puzzle"></i> hackCraft2とは</h2>
+                    <p class="lead">hackCraft2は、[Scratch3](https://stretch3.github.io/)を改良し、Minecraftの動物をプログラミングで操作できるようにした拡張エクステンションです。</p>
+                    
+                    <div class="extension-info">
+                        <h5><i class="bi bi-info-circle"></i> 拡張エクステンションの特徴</h5>
+                        <ul class="mb-0">
+                            <li><strong>Scratch3ベース:</strong> 既存のScratch3エディタを拡張</li>
+                            <li><strong>50個のブロック:</strong> 操作、調査、イベント取得などの機能</li>
+                            <li><strong>Minecraft連携:</strong> リアルタイムでMinecraftと通信</li>
+                            <li><strong>動物プログラミング:</strong> 動物の移動、行動、状態を制御</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-extension display-1 text-primary"></i>
+                            <h5 class="card-title mt-3">Scratch3拡張</h5>
+                            <p class="card-text">既存のScratch3エディタに新しい機能を追加します。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- エディタのスクリーンショット -->
+        <section class="screenshot-container">
+            <h3><i class="bi bi-image"></i> Scratch3エディタ + hackCraft2拡張</h3>
+            <p class="text-muted mb-4">Scratch3エディタにhackCraft2拡張エクステンションを追加した様子</p>
+            <img src="images/screenshots/scratch_1.png" alt="Scratch3エディタにhackCraft2拡張を追加したスクリーンショット" class="img-fluid">
+            <p class="text-muted mt-3"><small>左側のブロックパレットにhackCraft2のブロックが追加されています</small></p>
+        </section>
+
+        <!-- ブロックカテゴリ -->
+        <section class="mb-5">
+            <h2><i class="bi bi-collection"></i> hackCraft2ブロック（50個以上）</h2>
+            <p>hackCraft2拡張エクステンションでは、Minecraftの動物プログラミングに特化した豊富なブロックを提供しています。</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="block-category">
+                        <h5><i class="bi bi-controller"></i> 移動・操作ブロック（Level 0-3）</h5>
+                        <p>基本的な移動と操作を行うブロックです。</p>
+                        <ul>
+                            <li><code>（　　　　）に移動</code> - 指定方向に移動（前/後/左/右）</li>
+                            <li><code>（　　　　）方向を向く</code> - 向きを変更（左/右）</li>
+                            <li><code>（　　　　）の力で歩く</code> - 指定速度で移動</li>
+                            <li><code>（　　　　）の力でジャンプする</code> - ジャンプ</li>
+                            <li><code>（　　　　）度回る</code> - 指定角度で回転</li>
+                            <li><code>（　　　　）に移動</code> - 指定座標に瞬間移動</li>
+                            <li><code>（　　　　）を向く</code> - 指定座標を見る</li>
+                            <li><code>（　　　　）（　　　　）（　　　　）で加速</code> - 力を加える</li>
+                        </ul>
+                        <div class="block-example">
+                            <strong>例:</strong> 前方に移動してから左に回転
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="block-category">
+                        <h5><i class="bi bi-bricks"></i> ブロック操作ブロック（Level 1-4）</h5>
+                        <p>ブロックの配置・破壊・調査を行うブロックです。</p>
+                        <ul>
+                            <li><code>（　　　　）に（　　　　）で置く</code> - ブロックを配置</li>
+                            <li><code>（　　　　）を壊す</code> - ブロックを破壊</li>
+                            <li><code>（　　　　）に（　　　　）で置く</code> - 指定座標にブロック配置</li>
+                            <li><code>（　　　　）を壊す</code> - 指定座標のブロック破壊</li>
+                            <li><code>（　　　　）座標のブロック</code> - 指定座標のブロック調査</li>
+                            <li><code>植える</code> - 作物を植える</li>
+                            <li><code>収穫する</code> - 作物を収穫</li>
+                            <li><code>耕す</code> - 土を耕す</li>
+                            <li><code>平たくする</code> - 地面を平らにする</li>
+                        </ul>
+                        <div class="block-example">
+                            <strong>例:</strong> 前方のブロックを破壊してから新しいブロックを配置
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="block-category">
+                        <h5><i class="bi bi-box"></i> アイテム操作ブロック（Level 1-6）</h5>
+                        <p>アイテムの取得・使用・管理を行うブロックです。</p>
+                        <ul>
+                            <li><code>（　　　　）番のアイテムを持つ</code> - アイテムを拾う</li>
+                            <li><code>（　　　　）番のアイテムを（　　　　）に渡す</code> - アイテムを渡す</li>
+                            <li><code>（　　　　）番に（　　　　）をセット</code> - アイテムを設定</li>
+                            <li><code>（　　　　）にアイテムを使う</code> - アイテムを使用</li>
+                            <li><code>（　　　　）にアイテムを使う</code> - 指定座標でアイテム使用</li>
+                            <li><code>（　　　　）にアイテムを入れる</code> - チェストにアイテムを入れる</li>
+                            <li><code>（　　　　）からアイテムを取り出す</code> - チェストからアイテムを取る</li>
+                            <li><code>（　　　　）番にアイテムがある？</code> - スロットにアイテムがあるか確認</li>
+                        </ul>
+                        <div class="block-example">
+                            <strong>例:</strong> アイテムを拾ってからチェストに保管
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="block-category">
+                        <h5><i class="bi bi-lightning"></i> イベント・通信ブロック（Level 2-5）</h5>
+                        <p>イベントの検知と通信を行うブロックです。</p>
+                        <ul>
+                            <li><code>（　　　　）を受け取った時</code> - カスタムイベントの検知</li>
+                            <li><code>（　　　　）に（　　　　）を送る</code> - イベントを送信</li>
+                            <li><code>レッドストーン信号が変わるまで待つ</code> - レッドストーン信号を待機</li>
+                            <li><code>話しかけられるまで待つ</code> - チャットメッセージを待機</li>
+                            <li><code>（　　　　）と言う</code> - チャットメッセージを送信</li>
+                            <li><code>話しかけられた（　　　　）</code> - チャットデータを取得</li>
+                            <li><code>レッドストーン信号（　　　　）</code> - レッドストーンデータを取得</li>
+                        </ul>
+                        <div class="block-example">
+                            <strong>例:</strong> チャットメッセージを受信してから応答
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="block-category">
+                        <h5><i class="bi bi-search"></i> 調査・判定ブロック（Level 0-4）</h5>
+                        <p>環境や状態を調査・判定するブロックです。</p>
+                        <ul>
+                            <li><code>自分の座標を調べる</code> - 現在位置を取得</li>
+                            <li><code>（　　　　）にブロックがある？</code> - 指定方向が塞がっているか判定</li>
+                            <li><code>（　　　　）のブロックを壊せる？</code> - 指定方向を掘れるか判定</li>
+                            <li><code>（　　　　）までの距離</code> - ターゲットまでの距離を取得</li>
+                            <li><code>（　　　　）までの距離</code> - 指定座標までの距離を計算</li>
+                            <li><code>壊れたブロック（　　　　）</code> - 破壊したブロックの情報を取得</li>
+                            <li><code>（　　　　）色のブロック</code> - ブロックの色を取得</li>
+                        </ul>
+                        <div class="block-example">
+                            <strong>例:</strong> 前方が塞がっているか確認してから行動決定
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="block-category">
+                        <h5><i class="bi bi-gear"></i> 高度な機能ブロック（Level 4-7）</h5>
+                        <p>座標システムやAI機能を含む高度なブロックです。</p>
+                        <ul>
+                            <li><code>座標（　　　　）（　　　　）（　　　　）（　　　　）</code> - 座標システム（相対/絶対座標）</li>
+                            <li><code>足元に（　　　　）と名前をつける</code> - マークを設定</li>
+                            <li><code>（　　　　）の位置に移動</code> - マークに移動</li>
+                            <li><code>攻撃する</code> - 攻撃</li>
+                            <li><code>（　　　　）の装置を操作する</code> - アクション実行</li>
+                            <li><code>鳴く</code> - 音を鳴らす</li>
+                            <li><code>３D画面の不透明度（　　　　）</code> - 透明度を設定</li>
+                            <li><code>AIに（　　　　）と聞く</code> - AIとの対話</li>
+                            <li><code>/（　　　　）</code> - コマンド実行</li>
+                            <li><code>デバッグ情報</code> - 実行結果を取得</li>
+                        </ul>
+                        <div class="block-example">
+                            <strong>例:</strong> 座標を指定してテレポートし、AIと対話
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3Dビュー機能 -->
+        <section class="mb-5">
+            <h2><i class="bi bi-eye"></i> 独自のMinecraft 3Dビュー</h2>
+            <p>hackCraft2では、Scratch3エディタ内に独自のMinecraft 3Dビューを表示できます。これにより、プログラミングしながらリアルタイムでMinecraftの世界を確認できます。</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-camera-video"></i> リアルタイム表示</h5>
+                            <ul>
+                                <li><strong>ワールド表示:</strong> Minecraftのワールドを3Dで表示</li>
+                                <li><strong>エンティティ表示:</strong> 動物やプレイヤーの位置を確認</li>
+                                <li><strong>ブロック表示:</strong> 配置・破壊されたブロックを即座に反映</li>
+                                <li><strong>アニメーション:</strong> 移動やアクションをアニメーション表示</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-controller"></i> インタラクティブ操作</h5>
+                            <ul>
+                                <li><strong>視点変更:</strong> マウスで視点を自由に変更</li>
+                                <li><strong>ズーム機能:</strong> 拡大・縮小で詳細確認</li>
+                                <li><strong>座標表示:</strong> カーソル位置の座標を表示</li>
+                                <li><strong>ブロック情報:</strong> クリックでブロック情報を表示</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="alert alert-info">
+                <h5><i class="bi bi-info-circle"></i> 3Dビューの特徴</h5>
+                <ul class="mb-0">
+                    <li><strong>軽量:</strong> ブラウザ上で動作する軽量な3Dエンジン</li>
+                    <li><strong>同期:</strong> Minecraftサーバーとリアルタイム同期</li>
+                    <li><strong>カスタマイズ:</strong> 表示設定を自由にカスタマイズ</li>
+                    <li><strong>マルチプレイヤー:</strong> 複数プレイヤーの同時表示対応</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <footer class="bg-dark text-light py-4">
+        <div class="container text-center">
+            <p>&copy; 2024 hackCraft2. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

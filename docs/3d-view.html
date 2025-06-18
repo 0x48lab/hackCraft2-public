@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3Dビュー - hackCraft2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        .hero {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        .feature-card {
+            margin-bottom: 2rem;
+            transition: transform 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .screenshot-section {
+            background-color: #f8f9fa;
+            padding: 3rem 0;
+            margin: 2rem 0;
+        }
+        .screenshot-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .screenshot-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        .feature-list li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        .feature-list i {
+            color: #007bff;
+            margin-right: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">hackCraft2</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">ホーム</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="visual-programming.html">ビジュアルプログラミング</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="3d-view.html">3Dビュー</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="code-editor.html">コードエディタ</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="container text-center">
+            <h1 class="display-4">3Dビュー</h1>
+            <p class="lead">Scratch3エディタ内の独自Minecraft 3Dビュー</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 概要セクション -->
+        <section class="mb-5">
+            <h2><i class="bi bi-eye"></i> 3Dビューとは</h2>
+            <p>hackCraft2の3Dビューは、Vue.jsコンポーネントとして実装されています。Scratch3エディタやその他の独自エディタに埋め込んで使用したり、単独のWebサイトとしても利用できます。</p>
+            
+            <div class="alert alert-info">
+                <h5><i class="bi bi-info-circle"></i> 主な特徴</h5>
+                <ul class="mb-0">
+                    <li><strong>Vue.jsコンポーネント:</strong> 再利用可能で柔軟な実装</li>
+                    <li><strong>埋め込み対応:</strong> Scratch3エディタや独自エディタに組み込み可能</li>
+                    <li><strong>スタンドアロン:</strong> 単独のWebサイトとしても利用</li>
+                    <li><strong>リアルタイム同期:</strong> Minecraftサーバーと完全同期</li>
+                    <li><strong>軽量エンジン:</strong> ブラウザ上で高速動作</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- スクリーンショットセクション -->
+        <section class="screenshot-section">
+            <div class="container">
+                <h2 class="text-center mb-4"><i class="bi bi-camera"></i> 3Dビューの実際</h2>
+                <div class="screenshot-container">
+                    <img src="images/screenshots/3dview_1.png" alt="hackCraft2 3Dビューのスクリーンショット" class="img-fluid">
+                    <p class="text-muted mt-3">Scratch3エディタ内に表示されるMinecraft 3Dビュー</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 利用方法 -->
+        <section class="mb-5">
+            <h2><i class="bi bi-gear"></i> 利用方法</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-puzzle display-4 text-primary"></i>
+                            <h5 class="card-title">Scratch3エディタ埋め込み</h5>
+                            <p class="card-text">hackCraft2拡張エクステンションとしてScratch3エディタに組み込まれ、プログラミングと同時に3Dビューを確認できます。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-code-square display-4 text-success"></i>
+                            <h5 class="card-title">独自エディタ埋め込み</h5>
+                            <p class="card-text">Vue.jsコンポーネントとして他のエディタやアプリケーションに埋め込んで使用できます。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-window display-4 text-warning"></i>
+                            <h5 class="card-title">スタンドアロンサイト</h5>
+                            <p class="card-text">専用の3Dビューサイトとして単独で利用し、Minecraftワールドを監視できます。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 機能詳細 -->
+        <section class="mb-5">
+            <h2><i class="bi bi-gear"></i> 3Dビューの機能</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-camera-video"></i> リアルタイム表示機能</h5>
+                            <ul class="feature-list">
+                                <li><i class="bi bi-check-circle"></i><strong>ワールド表示:</strong> Minecraftのワールドを3Dで表示</li>
+                                <li><i class="bi bi-check-circle"></i><strong>エンティティ表示:</strong> 動物やプレイヤーの位置を確認</li>
+                                <li><i class="bi bi-check-circle"></i><strong>ブロック表示:</strong> 配置・破壊されたブロックを即座に反映</li>
+                                <li><i class="bi bi-check-circle"></i><strong>アニメーション:</strong> 移動やアクションをアニメーション表示</li>
+                                <li><i class="bi bi-check-circle"></i><strong>ライト効果:</strong> 時間帯に応じた照明効果</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-controller"></i> インタラクティブ操作</h5>
+                            <ul class="feature-list">
+                                <li><i class="bi bi-check-circle"></i><strong>視点変更:</strong> マウスドラッグで視点を自由に変更</li>
+                                <li><i class="bi bi-check-circle"></i><strong>ズーム機能:</strong> マウスホイールで拡大・縮小</li>
+                                <li><i class="bi bi-check-circle"></i><strong>座標表示:</strong> カーソル位置の座標をリアルタイム表示</li>
+                                <li><i class="bi bi-check-circle"></i><strong>ブロック情報:</strong> クリックでブロック情報を表示</li>
+                                <li><i class="bi bi-check-circle"></i><strong>エンティティ選択:</strong> クリックでエンティティを選択</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 技術仕様 -->
+        <section class="mb-5">
+            <h2><i class="bi bi-cpu"></i> 技術仕様</h2>
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-box display-4 text-primary"></i>
+                            <h5 class="card-title">Vue.jsコンポーネント</h5>
+                            <p class="card-text">再利用可能なVue.jsコンポーネントとして実装されており、様々な環境に組み込み可能です。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-lightning-charge display-4 text-success"></i>
+                            <h5 class="card-title">軽量エンジン</h5>
+                            <p class="card-text">WebGLベースの軽量3Dエンジンで、ブラウザ上で高速動作します。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-arrow-repeat display-4 text-warning"></i>
+                            <h5 class="card-title">リアルタイム同期</h5>
+                            <p class="card-text">MinecraftサーバーとのWebSocket通信でリアルタイム同期を実現。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body text-center">
+                            <i class="bi bi-gear-wide-connected display-4 text-info"></i>
+                            <h5 class="card-title">カスタマイズ可能</h5>
+                            <p class="card-text">表示設定やUIを自由にカスタマイズできます。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- スタンドアロンサイト -->
+        <section class="mb-5">
+            <h2><i class="bi bi-globe"></i> 3dviewスタンドアロンサイト</h2>
+            <p>3Dビューは専用のWebサイトとしても提供されており、Scratch3エディタを使用せずにMinecraftワールドを監視できます。</p>
+            
+            <div class="alert alert-success">
+                <h5><i class="bi bi-link-45deg"></i> 専用サイトの利用</h5>
+                <p class="mb-0">3dview専用サイトでは、Minecraftサーバーに直接接続してワールドの状態をリアルタイムで確認できます。プログラミング機能は不要で、純粋に3Dビュー機能のみを利用したい場合に最適です。</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-check-circle"></i> スタンドアロンサイトの利点</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li><strong>軽量:</strong> プログラミング機能が不要で軽量</li>
+                                <li><strong>専用:</strong> 3Dビュー機能に特化</li>
+                                <li><strong>高速:</strong> 余計な機能がないため高速動作</li>
+                                <li><strong>シンプル:</strong> 直感的で使いやすいインターフェース</li>
+                                <li><strong>監視専用:</strong> Minecraftワールドの監視に最適</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-gear"></i> 利用シーン</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li><strong>サーバー監視:</strong> Minecraftサーバーの状態確認</li>
+                                <li><strong>プレイヤー追跡:</strong> プレイヤーの位置と行動監視</li>
+                                <li><strong>ワールド確認:</strong> ワールドの地形や構造確認</li>
+                                <li><strong>デバッグ支援:</strong> 問題の視覚的特定</li>
+                                <li><strong>プレゼンテーション:</strong> ワールドの紹介や説明</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 使用方法 -->
+        <section class="mb-5">
+            <h2><i class="bi bi-play-circle"></i> 使用方法</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-1-circle"></i> Scratch3エディタ埋め込み</h5>
+                        </div>
+                        <div class="card-body">
+                            <ol>
+                                <li>Scratch3エディタでhackCraft2拡張を追加</li>
+                                <li>Minecraftサーバーに接続</li>
+                                <li>3Dビューパネルを開く</li>
+                                <li>ワールドが3Dで表示される</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-2-circle"></i> Vue.jsコンポーネント埋め込み</h5>
+                        </div>
+                        <div class="card-body">
+                            <ol>
+                                <li>Vue.jsプロジェクトに3Dビューコンポーネントを追加</li>
+                                <li>コンポーネントを必要な場所に配置</li>
+                                <li>Minecraftサーバー接続設定を行う</li>
+                                <li>カスタマイズして使用</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-3-circle"></i> スタンドアロンサイト利用</h5>
+                        </div>
+                        <div class="card-body">
+                            <ol>
+                                <li>3dview専用サイトにアクセス</li>
+                                <li>Minecraftサーバー情報を入力</li>
+                                <li>接続して3Dビューを確認</li>
+                                <li>必要に応じて設定を調整</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-mouse"></i> 基本操作</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li><strong>視点移動:</strong> マウスドラッグ</li>
+                                <li><strong>ズーム:</strong> マウスホイール</li>
+                                <li><strong>ブロック選択:</strong> クリック</li>
+                                <li><strong>エンティティ選択:</strong> クリック</li>
+                                <li><strong>座標確認:</strong> カーソル位置に表示</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-gear"></i> 設定オプション</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li><strong>表示品質:</strong> パフォーマンスと品質の調整</li>
+                                <li><strong>更新頻度:</strong> データ更新間隔の設定</li>
+                                <li><strong>表示範囲:</strong> 表示するエリアの制限</li>
+                                <li><strong>UIカスタマイズ:</strong> インターフェースの調整</li>
+                                <li><strong>テーマ設定:</strong> 色やスタイルの変更</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 高度な操作 -->
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-tools"></i> 高度な操作機能</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h6><i class="bi bi-arrow-clockwise"></i> プログラムロールバック</h6>
+                                    <ul>
+                                        <li><strong>ロールバック実行:</strong> プログラムを以前の状態に戻す</li>
+                                        <li><strong>ロールバック位置設定:</strong> 戻したい位置を指定</li>
+                                        <li><strong>段階的ロールバック:</strong> 複数の段階から選択</li>
+                                        <li><strong>ロールバック確認:</strong> 戻す前の確認表示</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <h6><i class="bi bi-box"></i> チェスト操作</h6>
+                                    <ul>
+                                        <li><strong>チェスト中身確認:</strong> チェストの内容を表示</li>
+                                        <li><strong>アイテム詳細表示:</strong> アイテムの詳細情報</li>
+                                        <li><strong>チェスト選択:</strong> クリックでチェストを選択</li>
+                                        <li><strong>中身の並び替え:</strong> アイテムの整理表示</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="col-md-4">
+                                    <h6><i class="bi bi-camera"></i> カメラ制御</h6>
+                                    <ul>
+                                        <li><strong>カメラ位置設定:</strong> 視点の位置を自由に設定</li>
+                                        <li><strong>追従モード:</strong> 特定のエンティティを追従</li>
+                                        <li><strong>固定視点:</strong> 特定の位置に固定</li>
+                                        <li><strong>カメラアニメーション:</strong> スムーズな視点移動</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="row mt-3">
+                                <div class="col-md-6">
+                                    <h6><i class="bi bi-heart"></i> ペット操作</h6>
+                                    <ul>
+                                        <li><strong>ペット選択:</strong> クリックでペットを選択</li>
+                                        <li><strong>ペット移動:</strong> 選択したペットを移動</li>
+                                        <li><strong>ブロック破壊:</strong> ペットにブロックを壊させる</li>
+                                        <li><strong>ペット情報表示:</strong> 選択したペットの詳細情報</li>
+                                        <li><strong>操作範囲表示:</strong> ペットが操作可能な範囲を表示</li>
+                                    </ul>
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    <h6><i class="bi bi-gear-wide-connected"></i> 統合操作</h6>
+                                    <ul>
+                                        <li><strong>複数操作:</strong> 複数の機能を組み合わせた操作</li>
+                                        <li><strong>ショートカット:</strong> キーボードショートカットでの操作</li>
+                                        <li><strong>操作履歴:</strong> 実行した操作の履歴表示</li>
+                                        <li><strong>操作の取り消し:</strong> 直前の操作を取り消し</li>
+                                        <li><strong>操作の繰り返し:</strong> 同じ操作を繰り返し実行</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 活用例 -->
+        <section class="mb-5">
+            <h2><i class="bi bi-lightbulb"></i> 活用例</h2>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-search"></i> デバッグ支援</h5>
+                            <p class="card-text">プログラムの動作を3Dビューで確認し、問題を視覚的に特定できます。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-eye"></i> リアルタイム監視</h5>
+                            <p class="card-text">Minecraftワールドの状態をリアルタイムで監視し、変化を即座に確認できます。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-4">
+                    <div class="card feature-card">
+                        <div class="card-body">
+                            <h5 class="card-title"><i class="bi bi-people"></i> マルチプレイヤー</h5>
+                            <p class="card-text">複数プレイヤーの位置と行動を同時に確認し、協調作業を支援します。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer class="bg-dark text-light py-4">
+        <div class="container text-center">
+            <p>&copy; 2024 hackCraft2. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

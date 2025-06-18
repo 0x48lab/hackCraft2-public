@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コードエディタ - hackCraft2</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <style>
+        .hero {
+            background-color: #2c3e50;
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+        }
+        .feature-card {
+            margin-bottom: 2rem;
+            transition: transform 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        .screenshot-section {
+            background-color: #f8f9fa;
+            padding: 3rem 0;
+            margin: 2rem 0;
+        }
+        .screenshot-container {
+            text-align: center;
+            margin: 2rem 0;
+        }
+        .screenshot-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .code-example {
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 5px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        .code-example pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        .language-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: bold;
+            border-radius: 3px;
+            margin-right: 0.5rem;
+        }
+        .python-badge { background-color: #3776ab; color: white; }
+        .dart-badge { background-color: #00b4ab; color: white; }
+        .typescript-badge { background-color: #3178c6; color: white; }
+        .javascript-badge { background-color: #f7df1e; color: black; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">hackCraft2</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">ホーム</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="visual-programming.html">ビジュアルプログラミング</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="3d-view.html">3Dビュー</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="code-editor.html">コードエディタ</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="container text-center">
+            <h1 class="display-4">コードエディタ</h1>
+            <p class="lead">複数のプログラミング言語でMinecraftを制御</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- 概要セクション -->
+        <section class="mb-5">
+            <h2><i class="bi bi-code-slash"></i> コードエディタとは</h2>
+            <p>hackCraft2では、複数のプログラミング言語とエディタをサポートしており、お好みの環境でMinecraftの制御を行えます。Python、Dart、TypeScript、JavaScriptなど、様々な言語でプログラミングが可能です。</p>
+            
+            <div class="alert alert-info">
+                <h5><i class="bi bi-info-circle"></i> サポート言語</h5>
+                <ul class="mb-0">
+                    <li><strong>Python:</strong> Google Colabやローカル環境で利用可能</li>
+                    <li><strong>Dart:</strong> Flutterアプリケーションでの利用</li>
+                    <li><strong>TypeScript/JavaScript:</strong> VSCode拡張とブラウザエディタ</li>
+                    <li><strong>高速実行:</strong> サーバー側直接実行で高速動作</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Pythonライブラリ -->
+        <section class="mb-5">
+            <h2><i class="bi bi-python"></i> Pythonライブラリ</h2>
+            <p><span class="language-badge python-badge">Python</span>PyPIで公開されているPythonライブラリです。Google ColabやローカルのPython環境などで利用できます。</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-download"></i> インストール</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="code-example">
+<pre>pip install py2hackCraft2</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-link-45deg"></i> ドキュメント</h5>
+                        </div>
+                        <div class="card-body">
+                            <a href="https://0x48lab.github.io/hackCraft2-python/" target="_blank" class="btn btn-primary">
+                                <i class="bi bi-book"></i> APIリファレンス
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-play-circle"></i> 使用例</h5>
+                </div>
+                <div class="card-body">
+                    <div class="code-example">
+<pre>from py2hackCraft2.modules import Player, Volume, LocationFactory
+
+# プレイヤーの接続
+player = Player("your_name")
+player.login("localhost", 25570)
+
+# エンティティの取得と操作
+entity = player.get_entity("entity_name")
+entity.set_event_area(Volume.local(10, 10, 10, -10, -10, -10))
+
+# その他の操作...</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Dartライブラリ -->
+        <section class="mb-5">
+            <h2><i class="bi bi-box"></i> Dartライブラリ</h2>
+            <p><span class="language-badge dart-badge">Dart</span>pub.devで公開されているDartライブラリです。Flutterアプリケーションでの利用に最適です。</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-download"></i> インストール</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="code-example">
+<pre>dependencies:
+  hackcraft: ^0.0.3</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-link-45deg"></i> パッケージ</h5>
+                        </div>
+                        <div class="card-body">
+                            <a href="https://pub.dev/packages/hackcraft" target="_blank" class="btn btn-success">
+                                <i class="bi bi-box"></i> pub.dev
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-play-circle"></i> 使用例</h5>
+                </div>
+                <div class="card-body">
+                    <div class="code-example">
+<pre>import 'dart:async';
+import 'package:hackcraft/src/hackcraft_client.dart';
+
+Future<void> main() async {
+  // プレイヤーを生成
+  final player = Player('your name');
+
+  // サーバーにログイン（host, portはサーバーに合わせて設定）
+  await player.login('localhost', 25570);
+
+  // エンティティ（例: エージェント）を取得
+  final agent = await player.getEntity('MyAgent');
+
+  // エージェントにチャットさせる
+  await agent.say('hello world');
+
+  // エージェントを前進させる
+  await agent.forward(n: 2);
+
+  // ログアウト
+  await player.logout();
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VSCode拡張 -->
+        <section class="mb-5">
+            <h2><i class="bi bi-braces"></i> VSCode拡張</h2>
+            <p><span class="language-badge typescript-badge">TypeScript</span><span class="language-badge javascript-badge">JavaScript</span><span class="language-badge python-badge">Python</span>他の言語サポートとは異なり、サーバー側で直接実行するので高速です。</p>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-download"></i> インストール</h5>
+                        </div>
+                        <div class="card-body">
+                            <ol>
+                                <li>VSCodeを開く</li>
+                                <li>拡張機能ビュー（Ctrl/Cmd + Shift + X）を開く</li>
+                                <li>"hackCraft2" を検索</li>
+                                <li>インストールボタンをクリック</li>
+                                <li>VSCodeを再起動</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-link-45deg"></i> リポジトリ</h5>
+                        </div>
+                        <div class="card-body">
+                            <a href="https://github.com/0x48lab/hackcraft2-vscode-extension" target="_blank" class="btn btn-dark">
+                                <i class="bi bi-github"></i> GitHub
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card mt-4">
+                <div class="card-header">
+                    <h5><i class="bi bi-play-circle"></i> 使用例</h5>
+                </div>
+                <div class="card-body">
+                    <div class="code-example">
+<pre>// 4x4の正方形を描く
+for (let i = 0; i < 4; i++) {
+    for (let j = 0; j < 4; j++) {
+        entity.forward(1)
+    }
+    entity.turnLeft()
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ビルトインJavaScriptエディタ -->
+        <section class="mb-5">
+            <h2><i class="bi bi-browser-chrome"></i> ビルトインJavaScriptエディタ</h2>
+            <p><span class="language-badge javascript-badge">JavaScript</span>こちらも、サーバー側で直接実行するので高速です。ブラウザ上で直接プログラミングができます。</p>
+            
+            <!-- スクリーンショットセクション -->
+            <div class="screenshot-section">
+                <div class="container">
+                    <h3 class="text-center mb-4"><i class="bi bi-camera"></i> JavaScriptエディタの実際</h3>
+                    <div class="screenshot-container">
+                        <img src="images/screenshots/javascript_editor_1.png" alt="hackCraft2 JavaScriptエディタのスクリーンショット" class="img-fluid">
+                        <p class="text-muted mt-3">ブラウザ上で動作するJavaScriptエディタ</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-lightning-charge"></i> 特徴</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li><strong>高速実行:</strong> サーバー側直接実行</li>
+                                <li><strong>ブラウザ対応:</strong> どのブラウザでも利用可能</li>
+                                <li><strong>リアルタイム:</strong> 即座に結果を確認</li>
+                                <li><strong>シンプル:</strong> インストール不要</li>
+                                <li><strong>統合:</strong> 3Dビューと連携</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5><i class="bi bi-gear"></i> 機能</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                <li><strong>シンタックスハイライト:</strong> JavaScriptの構文強調</li>
+                                <li><strong>自動補完:</strong> APIの自動補完機能</li>
+                                <li><strong>エラーチェック:</strong> リアルタイムエラー検出</li>
+                                <li><strong>実行制御:</strong> 実行/停止/一時停止</li>
+                                <li><strong>ログ表示:</strong> 実行結果の表示</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 比較表 -->
+        <section class="mb-5">
+            <h2><i class="bi bi-bar-chart"></i> 各エディタの比較</h2>
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>機能</th>
+                            <th>Python</th>
+                            <th>Dart</th>
+                            <th>VSCode拡張</th>
+                            <th>JavaScriptエディタ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>実行速度</strong></td>
+                            <td>中</td>
+                            <td>中</td>
+                            <td>高</td>
+                            <td>高</td>
+                        </tr>
+                        <tr>
+                            <td><strong>インストール</strong></td>
+                            <td>必要</td>
+                            <td>必要</td>
+                            <td>必要</td>
+                            <td>不要</td>
+                        </tr>
+                        <tr>
+                            <td><strong>環境</strong></td>
+                            <td>ローカル/Colab</td>
+                            <td>Flutter</td>
+                            <td>VSCode</td>
+                            <td>ブラウザ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3Dビュー連携</strong></td>
+                            <td>×</td>
+                            <td>×</td>
+                            <td>○</td>
+                            <td>○</td>
+                        </tr>
+                        <tr>
+                            <td><strong>デバッグ機能</strong></td>
+                            <td>○</td>
+                            <td>○</td>
+                            <td>○</td>
+                            <td>△</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- 今後の展望 -->
+        <section class="mb-5">
+            <div class="alert alert-success">
+                <h4><i class="bi bi-lightbulb"></i> 今後の展望</h4>
+                <p class="mb-0">hackCraft2は今後も様々な言語をサポートする予定です。新しい言語やエディタの追加により、より多くの開発者がMinecraftプログラミングを楽しめるようになります。</p>
+            </div>
+        </section>
+    </div>
+
+    <footer class="bg-dark text-light py-4">
+        <div class="container text-center">
+            <p>&copy; 2024 hackCraft2. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

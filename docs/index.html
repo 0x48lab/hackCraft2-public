@@ -156,21 +156,31 @@
                                 Paperは高性能で安定したサーバーソフトウェアです。
                             </div>
                             <div class="steps">
-                                <h4 class="mt-4">1. Paperサーバーのインストール</h4>
+                                <h4 class="mt-4">1. Paperサーバーのダウンロードとインストール</h4>
                                 <ol>
                                     <li>
                                         <a href="https://papermc.io/downloads" target="_blank">Paperのダウンロードページ</a>から最新版のPaperをダウンロード
                                         <ul>
-                                            <li>推奨バージョン: Minecraft 1.24.4(2025年6月10日現在)</li>
+                                            <li>推奨バージョン: Minecraft 1.24.5</li>
                                             <li>ダウンロードしたjarファイルを任意のディレクトリに配置</li>
                                         </ul>
                                     </li>
                                     <li>
-                                        サーバーの初期設定
+                                        サーバーの初期起動とEULAの同意
                                         <ul>
-                                            <li>jarファイルをダブルクリックして実行（初回起動）</li>
-                                            <li><code>eula.txt</code>を開き、<code>eula=true</code>に変更</li>
-                                            <li><code>server.properties</code>でサーバー設定を調整（必要に応じて）</li>
+                                            <li><strong>コマンドラインでの実行を推奨:</strong></li>
+                                            <li><strong>Windows (CMD):</strong> <code>java -jar paper-1.24.5-xxx.jar</code></li>
+                                            <li><strong>Linux/macOS (Shell):</strong> <code>java -jar paper-1.24.5-xxx.jar</code></li>
+                                            <li>初回起動時に<code>eula.txt</code>ファイルが生成されます</li>
+                                            <li><code>eula.txt</code>を開き、<code>eula=false</code>を<code>eula=true</code>に変更してください</li>
+                                            <li>この変更により、MinecraftのEULA（エンドユーザーライセンス契約）に同意したことになります</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        サーバー設定の調整（必要に応じて）
+                                        <ul>
+                                            <li><code>server.properties</code>ファイルでサーバー設定を調整</li>
+                                            <li>開発時は<code>online-mode=false</code>に設定することを推奨</li>
                                         </ul>
                                     </li>
                                 </ol>
@@ -178,16 +188,18 @@
                                 <h4 class="mt-4">2. hackCraft2プラグインのインストール</h4>
                                 <ol>
                                     <li>
-                                        サーバーの<code>plugins</code>フォルダを作成
+                                        <code>plugins</code>フォルダの確認
                                         <ul>
-                                            <li>Paperサーバーのルートディレクトリに<code>plugins</code>フォルダを作成</li>
+                                            <li>Paperサーバーの初回起動時に<code>plugins</code>フォルダが自動生成されます</li>
+                                            <li>フォルダが存在しない場合は、Paperサーバーのルートディレクトリに手動で作成してください</li>
                                         </ul>
                                     </li>
                                     <li>
                                         hackCraft2プラグインの配置
                                         <ul>
-                                            <li>上記の「ダウンロード」セクションから安定版またはリリース版をダウンロード</li>
+                                            <li>上記の「ダウンロード」セクションから安定版または最新ビルドをダウンロード</li>
                                             <li>ダウンロードしたjarファイルを<code>plugins</code>フォルダに配置</li>
+                                            <li>ファイル名は<code>hackcraft2-x.xx.x-xxx-all.jar</code>のままで構いません</li>
                                         </ul>
                                     </li>
                                 </ol>
@@ -195,10 +207,25 @@
                                 <h4 class="mt-4">3. サーバーの起動</h4>
                                 <ol>
                                     <li>
-                                        サーバーの起動
+                                        <strong>コマンドラインでの起動を推奨</strong>
                                         <ul>
-                                            <li>Paperのjarファイルを再度実行してサーバーを起動</li>
-                                            <li>初回起動時はプラグインの初期化に時間がかかる場合があります</li>
+                                            <li><strong>Windows (CMD):</strong></li>
+                                            <li><code>java -Xmx4G -Xms2G -jar paper-1.24.5-xxx.jar</code></li>
+                                            <li><strong>Linux/macOS (Shell):</strong></li>
+                                            <li><code>java -Xmx4G -Xms2G -jar paper-1.24.5-xxx.jar</code></li>
+                                            <li><strong>Linuxでの仮想ターミナル使用例:</strong></li>
+                                            <li><code>tmux new-session -d -s minecraft 'java -Xmx4G -Xms2G -jar paper-1.24.5-xxx.jar'</code></li>
+                                            <li><code>tmux attach-session -t minecraft</code>（セッションに接続）</li>
+                                            <li><code>Ctrl+B, D</code>（セッションから切断、バックグラウンド実行継続）</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        起動パラメータの説明
+                                        <ul>
+                                            <li><code>-Xmx4G</code>: 最大メモリ使用量を4GBに設定</li>
+                                            <li><code>-Xms2G</code>: 初期メモリ使用量を2GBに設定</li>
+                                            <li><code>-jar</code>: JARファイルを実行することを指定</li>
+                                            <li>メモリ設定はサーバーの性能に応じて調整してください</li>
                                         </ul>
                                     </li>
                                     <li>
@@ -206,6 +233,8 @@
                                         <ul>
                                             <li>サーバーが正常に起動したら、Minecraftクライアントから接続</li>
                                             <li>サーバーコンソールで<code>/plugins</code>コマンドを実行し、hackCraft2が正常に読み込まれていることを確認</li>
+                                            <li>プラグインが正常に読み込まれている場合、以下のようなメッセージが表示されます:</li>
+                                            <li><code>[hackCraft2] hackCraft2 has been enabled!</code></li>
                                         </ul>
                                     </li>
                                 </ol>
@@ -213,9 +242,10 @@
                                 <div class="alert alert-warning mt-4">
                                     <h5><i class="bi bi-exclamation-triangle"></i> 注意事項</h5>
                                     <ul class="mb-0">
-                                        <li>サーバーのメモリ割り当ては最低4GB以上を推奨</li>
+                                        <li>サーバーのメモリ割り当ては最低4GB以上を推奨（<code>-Xmx4G</code>）</li>
                                         <li>初回起動時は<code>server.properties</code>の<code>online-mode</code>を<code>false</code>に設定することを推奨（開発時）</li>
                                         <li>本番環境では適切なセキュリティ設定を行ってください</li>
+                                        <li>コマンドラインでの実行により、ログの確認やサーバーの制御が容易になります</li>
                                     </ul>
                                 </div>
 
@@ -225,6 +255,73 @@
                                         <li>サーバーが起動しない場合は、Javaのバージョンが17以上であることを確認</li>
                                         <li>プラグインが読み込まれない場合は、jarファイルが正しい<code>plugins</code>フォルダに配置されているか確認</li>
                                         <li>エラーメッセージが表示される場合は、サーバーのログ（<code>logs/latest.log</code>）を確認</li>
+                                        <li>メモリ不足の場合は、<code>-Xmx</code>パラメータを増やしてください</li>
+                                        <li>Linuxでtmuxを使用する場合、<code>tmux list-sessions</code>でセッション一覧を確認できます</li>
+                                    </ul>
+                                </div>
+
+                                <h4 class="mt-4">4. ローカルでのテスト</h4>
+                                <div class="alert alert-success">
+                                    <h5><i class="bi bi-check-circle"></i> ローカルテストの準備</h5>
+                                    <p class="mb-0">開発やテスト目的でローカル環境でサーバーを実行する場合の設定手順です。</p>
+                                </div>
+                                <ol>
+                                    <li>
+                                        <strong>server.propertiesの設定</strong>
+                                        <ul>
+                                            <li><code>server.properties</code>ファイルを開き、以下の設定を確認・変更してください：</li>
+                                            <li><code>online-mode=false</code> - オフライン環境での接続を許可</li>
+                                            <li><code>server-port=25565</code> - デフォルトポート（変更可能）</li>
+                                            <li><code>gamemode=creative</code> - クリエイティブモードでテスト</li>
+                                            <li><code>difficulty=peaceful</code> - ピースフルモードで安全にテスト</li>
+                                            <li><code>spawn-protection=0</code> - スポーン保護を無効化</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <strong>ローカルネットワークでの接続</strong>
+                                        <ul>
+                                            <li><strong>同一PCでの接続:</strong> <code>localhost:25565</code> または <code>127.0.0.1:25565</code></li>
+                                            <li><strong>同一ネットワーク内の他のPCから接続:</strong></li>
+                                            <li>サーバーPCのIPアドレスを確認（Windows: <code>ipconfig</code>, Linux/macOS: <code>ifconfig</code> または <code>ip addr</code>）</li>
+                                            <li>クライアント側で <code>サーバーPCのIP:25565</code> で接続</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <strong>ファイアウォールの設定</strong>
+                                        <ul>
+                                            <li><strong>Windows:</strong> Windows Defenderファイアウォールでポート25565を許可</li>
+                                            <li><strong>Linux:</strong> <code>sudo ufw allow 25565</code> または <code>sudo iptables -A INPUT -p tcp --dport 25565 -j ACCEPT</code></li>
+                                            <li><strong>macOS:</strong> システム環境設定 > セキュリティとプライバシー > ファイアウォールで設定</li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <strong>テスト手順</strong>
+                                        <ul>
+                                            <li>サーバーを起動し、正常に起動することを確認</li>
+                                            <li>Minecraftクライアントを起動し、サーバーに接続</li>
+                                            <li>サーバーコンソールで <code>/plugins</code> を実行し、hackCraft2が読み込まれていることを確認</li>
+                                            <li>ゲーム内でhackCraft2の機能をテスト</li>
+                                        </ul>
+                                    </li>
+                                </ol>
+
+                                <div class="alert alert-warning mt-4">
+                                    <h5><i class="bi bi-exclamation-triangle"></i> ローカルテスト時の注意事項</h5>
+                                    <ul class="mb-0">
+                                        <li><code>online-mode=false</code>に設定している場合、Mojangアカウントでの認証は行われません</li>
+                                        <li>テスト用のワールドデータは<code>world</code>フォルダに保存されます</li>
+                                        <li>本番環境では必ず<code>online-mode=true</code>に設定してください</li>
+                                        <li>ファイアウォールの設定は、テスト完了後に元に戻すことを推奨します</li>
+                                    </ul>
+                                </div>
+
+                                <div class="alert alert-info mt-4">
+                                    <h5><i class="bi bi-gear"></i> 開発者向け設定</h5>
+                                    <ul class="mb-0">
+                                        <li>デバッグ情報を表示するには、サーバー起動時に<code>-Ddebug=true</code>を追加</li>
+                                        <li>詳細なログを確認するには、<code>logs/latest.log</code>を監視</li>
+                                        <li>プラグインのリロードには<code>/reload</code>コマンドを使用（注意: 一部のデータがリセットされる場合があります）</li>
+                                        <li>サーバーの停止には<code>/stop</code>コマンドを使用</li>
                                     </ul>
                                 </div>
                             </div>

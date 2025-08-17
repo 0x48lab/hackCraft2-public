@@ -1,11 +1,11 @@
 {
-  "version": "1.21.5-R65",
-  "tag": "v1.0.1",
-  "release_date": "2025-08-17T02:34:31Z",
-  "download_url": "https://github.com/0x48lab/hackCraft2-public/releases/download/v1.0.1/hackcraft2-1.21.5-R65-all.jar",
-  "source_commit_hash": "9dc56bc99339ff2bc3638f7cb83a741051ecd00d",
-  "public_commit_hash": "638550d63d9ccc2a0b44555de195065c01cbec3e",
+  "version": "1.21.5-R66",
+  "tag": "v1.21.5-R66",
+  "release_date": "2025-08-17T02:44:51Z",
+  "download_url": "https://github.com/0x48lab/hackCraft2-public/releases/download/v1.21.5-R66/hackcraft2-1.21.5-R66-all.jar",
+  "source_commit_hash": "8d160155c193955a69c3cb096a3b65b522e03b2f",
+  "public_commit_hash": "0df5637152a352ec5d2ef962e38721f42aca695c",
   "paper_version": "",
-  "jar_filename": "hackcraft2-1.21.5-R65-all.jar",
+  "jar_filename": "hackcraft2-1.21.5-R66-all.jar",
   "jar_size": 182393038
 }

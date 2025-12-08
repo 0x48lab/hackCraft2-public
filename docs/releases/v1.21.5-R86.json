@@ -1,11 +1,11 @@
 {
   "version": "1.21.5-R86",
   "tag": "v1.21.5-R86",
-  "release_date": "2025-12-07T14:30:25Z",
+  "release_date": "2025-12-08T02:47:02Z",
   "download_url": "https://github.com/0x48lab/hackCraft2-public/releases/download/v1.21.5-R86/hackcraft2-1.21.5-R86-all.jar",
-  "source_commit_hash": "62172fcc1de447f8c648c65439586f88fed618bc",
-  "public_commit_hash": "4f74bddf2bfc0292959ca56a77433ee06ae1ddf9",
+  "source_commit_hash": "749d709937e36702a2bd1de1ce387d92871e3197",
+  "public_commit_hash": "4dca79f9583d500e05bcf4783947c1f7ca50d2a9",
   "paper_version": "",
   "jar_filename": "hackcraft2-1.21.5-R86-all.jar",
-  "jar_size": 182613523
+  "jar_size": 182613773
 }

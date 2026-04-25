@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- キャッシュ制御を強化 -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
-    <!-- 自動更新 -->
     <meta http-equiv="refresh" content="300">
     <title>hackCraft2 - Minecraft Modding Platform</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -30,6 +28,23 @@
             background-color: #f8f9fa;
             padding: 3rem 0;
             margin: 2rem 0;
+        }
+        .plugin-header {
+            border-left: 4px solid;
+            padding-left: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        .plugin-header.hackcraft {
+            border-color: #0d6efd;
+        }
+        .plugin-header.worldcraft {
+            border-color: #198754;
+        }
+        .nav-pills .nav-link.active[data-plugin="hackcraft"] {
+            background-color: #0d6efd;
+        }
+        .nav-pills .nav-link.active[data-plugin="worldcraft"] {
+            background-color: #198754;
         }
     </style>
 </head>
@@ -115,43 +130,117 @@
         <section id="download" class="download-section">
             <div class="container">
                 <h2 class="text-center mb-4">ダウンロード</h2>
-                <div class="row justify-content-center">
-                    <div class="col-md-6 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="bi bi-lightning-charge"></i> 最新ビルド
-                                </h5>
-                                <p class="card-text">最新の開発ビルドをダウンロードできます。最新の機能や修正が含まれていますが、安定性は保証されません。</p>
-                                <div id="latest-build">
-                                    <p class="text-muted">ビルド情報を読み込み中...</p>
+
+                <!-- プラグイン選択タブ -->
+                <ul class="nav nav-pills justify-content-center mb-4" id="pluginTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="hackcraft-tab" data-bs-toggle="pill" data-bs-target="#hackcraft-panel" type="button" role="tab" data-plugin="hackcraft">
+                            <i class="bi bi-puzzle"></i> hackCraft2 Plugin
+                        </button>
+                    </li>
+                    <li class="nav-item ms-2" role="presentation">
+                        <button class="nav-link" id="worldcraft-tab" data-bs-toggle="pill" data-bs-target="#worldcraft-panel" type="button" role="tab" data-plugin="worldcraft">
+                            <i class="bi bi-globe"></i> WorldCraft Plugin
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="pluginTabContent">
+                    <!-- hackCraft2 Plugin -->
+                    <div class="tab-pane fade show active" id="hackcraft-panel" role="tabpanel">
+                        <div class="plugin-header hackcraft">
+                            <h4 class="mb-1">hackCraft2 Plugin</h4>
+                            <p class="text-muted mb-0">教育用プログラミング学習プラグイン - Scratch/JavaScript/Pythonでプログラミング</p>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="bi bi-lightning-charge"></i> 最新ビルド
+                                        </h5>
+                                        <p class="card-text">最新の開発ビルドをダウンロードできます。最新の機能や修正が含まれていますが、安定性は保証されません。</p>
+                                        <div id="hc-latest-build">
+                                            <p class="text-muted">ビルド情報を読み込み中...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="bi bi-tags"></i> 安定版リリース
+                                        </h5>
+                                        <p class="card-text">タグ付きの安定版リリースをダウンロードできます。テスト済みで安定した動作が期待できるバージョンです。</p>
+                                        <div id="hc-stable-release">
+                                            <p class="text-muted">リリース情報を読み込み中...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="bi bi-clock-history"></i> 過去のリリース
+                                        </h5>
+                                        <div id="hc-release-history">
+                                            <p class="text-muted">リリース履歴を読み込み中...</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6 mb-4">
-                        <div class="card h-100">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="bi bi-tags"></i> 安定版リリース
-                                </h5>
-                                <p class="card-text">タグ付きの安定版リリースをダウンロードできます。テスト済みで安定した動作が期待できるバージョンです。</p>
-                                <div id="stable-release">
-                                    <p class="text-muted">リリース情報を読み込み中...</p>
+
+                    <!-- WorldCraft Plugin -->
+                    <div class="tab-pane fade" id="worldcraft-panel" role="tabpanel">
+                        <div class="plugin-header worldcraft">
+                            <h4 class="mb-1">WorldCraft Plugin</h4>
+                            <p class="text-muted mb-0">Kotlinスクリプトでシナリオ・NPCを作成するプラグイン</p>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="bi bi-lightning-charge"></i> 最新ビルド
+                                        </h5>
+                                        <p class="card-text">最新の開発ビルドをダウンロードできます。最新の機能や修正が含まれていますが、安定性は保証されません。</p>
+                                        <div id="wc-latest-build">
+                                            <p class="text-muted">ビルド情報を読み込み中...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="bi bi-tags"></i> 安定版リリース
+                                        </h5>
+                                        <p class="card-text">タグ付きの安定版リリースをダウンロードできます。テスト済みで安定した動作が期待できるバージョンです。</p>
+                                        <div id="wc-stable-release">
+                                            <p class="text-muted">リリース情報を読み込み中...</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </div>
-                <div class="row mt-4">
-                    <div class="col-12">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <i class="bi bi-clock-history"></i> 過去のリリース
-                                </h5>
-                                <div id="release-history">
-                                    <p class="text-muted">リリース履歴を読み込み中...</p>
+                        <div class="row mt-2">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="bi bi-clock-history"></i> 過去のリリース
+                                        </h5>
+                                        <div id="wc-release-history">
+                                            <p class="text-muted">リリース履歴を読み込み中...</p>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -203,7 +292,7 @@
                                     </li>
                                 </ol>
 
-                                <h4 class="mt-4">2. hackCraft2プラグインのインストール</h4>
+                                <h4 class="mt-4">2. プラグインのインストール</h4>
                                 <ol>
                                     <li>
                                         <code>plugins</code>フォルダの確認
@@ -213,11 +302,13 @@
                                         </ul>
                                     </li>
                                     <li>
-                                        hackCraft2プラグインの配置
+                                        プラグインの配置
                                         <ul>
-                                            <li>上記の「ダウンロード」セクションから安定版または最新ビルドをダウンロード</li>
+                                            <li>上記の「ダウンロード」セクションから必要なプラグインをダウンロード</li>
                                             <li>ダウンロードしたjarファイルを<code>plugins</code>フォルダに配置</li>
-                                            <li>ファイル名は<code>hackcraft2-x.xx.x-xxx-all.jar</code>のままで構いません</li>
+                                            <li><strong>hackCraft2 Plugin:</strong> <code>hackcraft2-x.xx.x-xxx-all.jar</code></li>
+                                            <li><strong>WorldCraft Plugin:</strong> <code>WorldCraftAI-x.x.jar</code></li>
+                                            <li>両方のプラグインを同時に使用することも可能です</li>
                                         </ul>
                                     </li>
                                 </ol>
@@ -250,9 +341,7 @@
                                         動作確認
                                         <ul>
                                             <li>サーバーが正常に起動したら、Minecraftクライアントから接続</li>
-                                            <li>サーバーコンソールで<code>/plugins</code>コマンドを実行し、hackCraft2が正常に読み込まれていることを確認</li>
-                                            <li>プラグインが正常に読み込まれている場合、以下のようなメッセージが表示されます:</li>
-                                            <li><code>[hackCraft2] hackCraft2 has been enabled!</code></li>
+                                            <li>サーバーコンソールで<code>/plugins</code>コマンドを実行し、プラグインが正常に読み込まれていることを確認</li>
                                         </ul>
                                     </li>
                                 </ol>
@@ -317,8 +406,8 @@
                                         <ul>
                                             <li>サーバーを起動し、正常に起動することを確認</li>
                                             <li>Minecraftクライアントを起動し、サーバーに接続</li>
-                                            <li>サーバーコンソールで <code>/plugins</code> を実行し、hackCraft2が読み込まれていることを確認</li>
-                                            <li>ゲーム内でhackCraft2の機能をテスト</li>
+                                            <li>サーバーコンソールで <code>/plugins</code> を実行し、プラグインが読み込まれていることを確認</li>
+                                            <li>ゲーム内で各プラグインの機能をテスト</li>
                                         </ul>
                                     </li>
                                 </ol>
@@ -358,7 +447,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // キャッシュを無効化してデータを取得する共通関数
         const fetchWithTimeout = (url, timeout = 5000) => {
             return Promise.race([
                 fetch(url, {
@@ -395,30 +483,23 @@
 
             const badgeClass = isStable ? 'bg-success' : 'bg-warning';
             const badgeText = isStable ? '安定版' : '最新ビルド';
-            
-            // 新しいstable.jsonフォーマットに対応
+
             const downloadUrl = buildInfo.download_url || buildInfo.assets?.[0]?.browser_download_url;
-            const fileName = buildInfo.jar_filename || buildInfo.assets?.[0]?.name || 'hackCraft2.jar';
+            const fileName = buildInfo.jar_filename || buildInfo.assets?.[0]?.name || 'plugin.jar';
             const fileSize = formatFileSize(buildInfo.jar_size || buildInfo.assets?.[0]?.size);
             const releaseDate = formatDate(buildInfo.release_date || buildInfo.published_at);
-            
-            // ビルド番号とバージョンの取得
+
             let buildNumber = 'N/A';
             let version = 'N/A';
             let paperVersion = buildInfo.paper_version || '';
-            
+
             if (buildInfo.build_number) {
-                // stable.jsonフォーマット
                 buildNumber = buildInfo.build_number;
                 version = buildInfo.version || buildInfo.release_tag || `stable-${buildNumber}`;
             } else if (buildInfo.version) {
-                // releases.jsonフォーマット
                 version = buildInfo.version;
-                // versionからR53の部分を抽出（例: "1.21.5-R53" -> "R53"）
                 const match = buildInfo.version.match(/R(\d+)/);
                 buildNumber = match ? match[1] : 'N/A';
-                
-                // versionからPaperバージョンを抽出（例: "1.21.5-R53" -> "1.21.5"）
                 const paperMatch = buildInfo.version.match(/^(\d+\.\d+\.\d+)/);
                 if (paperMatch && !paperVersion) {
                     paperVersion = paperMatch[1];
@@ -429,8 +510,6 @@
                 version = buildInfo.commit_hash;
             }
 
-            // コミットハッシュの取得
-            const commitHash = buildInfo.public_commit_hash || buildInfo.source_commit_hash;
             const releaseTag = buildInfo.release_tag || buildInfo.tag;
             const showReleaseLink = releaseTag && releaseTag.length > 0;
 
@@ -448,7 +527,6 @@
                                 </p>
                                 ${buildInfo.jar_filename ? `<p class="mb-1 small text-muted"><strong>ファイル名:</strong> ${buildInfo.jar_filename}</p>` : ''}
                                 ${paperVersion ? `<p class="mb-1 small text-muted"><strong>Paperバージョン:</strong> ${paperVersion}</p>` : ''}
-                                ${buildInfo.body ? `<p class="mb-1 small text-muted">${buildInfo.body.split('\n')[0]}</p>` : ''}
                             </div>
                         </div>
                         <div class="text-end ms-3">
@@ -475,36 +553,31 @@
                 </div>`;
         };
 
-        const loadPastBuilds = async () => {
+        const loadPastBuilds = async (stableJsonUrl, stablesDir, tagPrefix) => {
             try {
-                // 現在のstable.jsonからビルド番号を取得
-                const stableData = await fetchWithTimeout('stable.json');
+                const stableData = await fetchWithTimeout(stableJsonUrl);
                 let currentBuildNumber = 0;
-                
-                // 新しいstable.jsonフォーマットに対応
+
                 if (stableData.build_number) {
                     currentBuildNumber = stableData.build_number;
                 } else if (stableData.latest?.commit_hash) {
-                    // 古いフォーマット（latestプロパティがある場合）
                     const hashParts = stableData.latest.commit_hash.split('-');
                     currentBuildNumber = parseInt(hashParts[1]) || 0;
                 }
-                
+
                 const pastBuilds = [];
-                
-                // stablesディレクトリから過去のビルド情報を取得（現在のビルド番号から逆順で取得）
+
                 for (let i = currentBuildNumber - 1; i >= Math.max(1, currentBuildNumber - 10); i--) {
                     try {
-                        const buildData = await fetchWithTimeout(`stables/stable-${i}.json`);
+                        const buildData = await fetchWithTimeout(`${stablesDir}/${tagPrefix}${i}.json`);
                         if (buildData) {
                             pastBuilds.push(buildData);
                         }
                     } catch (error) {
-                        // ファイルが存在しない場合はスキップ
-                        console.log(`stable-${i}.json not found`);
+                        console.log(`${tagPrefix}${i}.json not found`);
                     }
                 }
-                
+
                 return pastBuilds;
             } catch (error) {
                 console.log('過去のビルド情報の取得に失敗:', error);
@@ -512,90 +585,99 @@
             }
         };
 
-        const updateReleaseInfo = async () => {
-            try {
-                // stable.jsonから最新ビルド情報を取得
-                const stableData = await fetchWithTimeout('stable.json');
-                
-                // 最新ビルドの表示を更新
-                const latestBuildDiv = document.getElementById('latest-build');
-                if (stableData.latest) {
-                    // 古いフォーマット（latestプロパティがある場合）
-                    latestBuildDiv.innerHTML = `
-                        <div class="list-group">
-                            ${createBuildCard(stableData.latest, false)}
-                        </div>`;
-                } else if (stableData.build_number) {
-                    // 新しいフォーマット（直接プロパティがある場合）
-                    latestBuildDiv.innerHTML = `
-                        <div class="list-group">
-                            ${createBuildCard(stableData, false)}
-                        </div>`;
-                } else {
-                    latestBuildDiv.innerHTML = '<p class="text-muted">最新ビルドの情報が見つかりませんでした。</p>';
-                }
-
-                // 安定版リリース情報を表示（releases.jsonのデータを使用）
-                const stableReleaseDiv = document.getElementById('stable-release');
-                try {
-                    const releaseData = await fetchWithTimeout('releases.json');
-                    if (releaseData && releaseData.version) {
-                        // releases.jsonのデータを安定版として表示
-                        stableReleaseDiv.innerHTML = `
-                            <div class="list-group">
-                                ${createBuildCard(releaseData, true)}
-                            </div>`;
-                    } else {
-                        stableReleaseDiv.innerHTML = '<p class="text-muted">安定版リリースの情報は現在準備中です。</p>';
-                    }
-                } catch (error) {
-                    console.log('releases.jsonが見つかりません:', error);
-                    stableReleaseDiv.innerHTML = '<p class="text-muted">安定版リリースの情報は現在準備中です。</p>';
-                }
-
-                // 過去のビルド情報を取得
-                const pastBuilds = await loadPastBuilds();
-                const releaseHistoryDiv = document.getElementById('release-history');
-                
-                if (pastBuilds.length > 0) {
-                    const pastBuildsHtml = pastBuilds
-                        .sort((a, b) => {
-                            const dateA = new Date(a.release_date || a.published_at);
-                            const dateB = new Date(b.release_date || b.published_at);
-                            return dateB - dateA;
-                        })
-                        .slice(0, 10) // 最新10件を表示
-                        .map(build => createBuildCard(build, false))
-                        .join('');
-                    
-                    releaseHistoryDiv.innerHTML = `
-                        <div class="list-group">
-                            ${pastBuildsHtml}
-                        </div>`;
-                } else {
-                    releaseHistoryDiv.innerHTML = '<p class="text-muted">過去のビルド情報は現在準備中です。</p>';
-                }
-
-            } catch (error) {
-                console.error('リリース情報の更新に失敗しました:', error);
-                ['latest-build', 'stable-release', 'release-history'].forEach(id => {
-                    const div = document.getElementById(id);
-                    if (div) {
-                        div.innerHTML = `
-                            <div class="alert alert-warning">
-                                <i class="bi bi-exclamation-triangle"></i> リリース情報の取得に失敗しました
-                            </div>`;
-                    }
-                });
+        const renderBuildInfo = (elementId, data, isStable) => {
+            const div = document.getElementById(elementId);
+            if (!div) return;
+            if (data) {
+                div.innerHTML = `<div class="list-group">${createBuildCard(data, isStable)}</div>`;
+            } else {
+                div.innerHTML = '<p class="text-muted">情報は現在準備中です。</p>';
             }
         };
 
-        // ページ読み込み時にリリース情報を表示
+        const renderPastBuilds = (elementId, builds) => {
+            const div = document.getElementById(elementId);
+            if (!div) return;
+            if (builds.length > 0) {
+                const html = builds
+                    .sort((a, b) => new Date(b.release_date || b.published_at) - new Date(a.release_date || a.published_at))
+                    .slice(0, 10)
+                    .map(build => createBuildCard(build, false))
+                    .join('');
+                div.innerHTML = `<div class="list-group">${html}</div>`;
+            } else {
+                div.innerHTML = '<p class="text-muted">過去のビルド情報は現在準備中です。</p>';
+            }
+        };
+
+        const renderError = (elementIds) => {
+            elementIds.forEach(id => {
+                const div = document.getElementById(id);
+                if (div) {
+                    div.innerHTML = `
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle"></i> リリース情報の取得に失敗しました
+                        </div>`;
+                }
+            });
+        };
+
+        const updateHackCraftInfo = async () => {
+            try {
+                const stableData = await fetchWithTimeout('stable.json');
+                if (stableData.latest) {
+                    renderBuildInfo('hc-latest-build', stableData.latest, false);
+                } else if (stableData.build_number) {
+                    renderBuildInfo('hc-latest-build', stableData, false);
+                }
+
+                try {
+                    const releaseData = await fetchWithTimeout('releases.json');
+                    renderBuildInfo('hc-stable-release', releaseData?.version ? releaseData : null, true);
+                } catch (error) {
+                    renderBuildInfo('hc-stable-release', null, true);
+                }
+
+                const pastBuilds = await loadPastBuilds('stable.json', 'stables', 'stable-');
+                renderPastBuilds('hc-release-history', pastBuilds);
+            } catch (error) {
+                console.error('hackCraft2 リリース情報の更新に失敗:', error);
+                renderError(['hc-latest-build', 'hc-stable-release', 'hc-release-history']);
+            }
+        };
+
+        const updateWorldCraftInfo = async () => {
+            try {
+                const stableData = await fetchWithTimeout('worldcraft-stable.json');
+                if (stableData.build_number) {
+                    renderBuildInfo('wc-latest-build', stableData, false);
+                } else {
+                    renderBuildInfo('wc-latest-build', null, false);
+                }
+
+                try {
+                    const releaseData = await fetchWithTimeout('worldcraft-releases.json');
+                    renderBuildInfo('wc-stable-release', releaseData?.version ? releaseData : null, true);
+                } catch (error) {
+                    renderBuildInfo('wc-stable-release', null, true);
+                }
+
+                const pastBuilds = await loadPastBuilds('worldcraft-stable.json', 'worldcraft-stables', 'wc-stable-');
+                renderPastBuilds('wc-release-history', pastBuilds);
+            } catch (error) {
+                console.error('WorldCraft リリース情報の更新に失敗:', error);
+                renderError(['wc-latest-build', 'wc-stable-release', 'wc-release-history']);
+            }
+        };
+
         document.addEventListener('DOMContentLoaded', () => {
-            updateReleaseInfo();
-            // 5分ごとに自動更新
-            setInterval(updateReleaseInfo, 300000);
+            updateHackCraftInfo();
+            updateWorldCraftInfo();
+            setInterval(() => {
+                updateHackCraftInfo();
+                updateWorldCraftInfo();
+            }, 300000);
         });
     </script>
 </body>
-</html> 
+</html>

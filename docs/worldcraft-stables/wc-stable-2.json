@@ -1,0 +1,12 @@
+{
+  "plugin": "worldcraft",
+  "build_number": 2,
+  "version": "1.0-SNAPSHOT",
+  "release_date": "2026-04-26T00:02:04Z",
+  "download_url": "https://github.com/0x48lab/hackCraft2-public/releases/download/wc-stable-2/WorldCraftAI-1.0-SNAPSHOT.jar",
+  "source_commit_hash": "62de0cbc59b0793c1c01fab8e1387833d7706923",
+  "public_commit_hash": "d4026ac1d3f089c6c85ef9ecee6d0b64a939b319",
+  "release_tag": "wc-stable-2",
+  "jar_filename": "WorldCraftAI-1.0-SNAPSHOT.jar",
+  "jar_size": 100805564
+}

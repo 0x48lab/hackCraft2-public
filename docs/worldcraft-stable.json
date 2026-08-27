@@ -1,12 +1,12 @@
 {
   "plugin": "worldcraft",
-  "build_number": 5,
+  "build_number": 6,
   "version": "1.0-SNAPSHOT",
-  "release_date": "2026-07-22T22:14:06Z",
-  "download_url": "https://github.com/0x48lab/hackCraft2-public/releases/download/wc-stable-5/WorldCraftAI-1.0-SNAPSHOT.jar",
-  "source_commit_hash": "b01aea24a3f7bf06b7981685405e3311e2b4dd29",
-  "public_commit_hash": "04532b7e88e6c85c9c145148bdcfacd2ec5440ef",
-  "release_tag": "wc-stable-5",
+  "release_date": "2026-08-27T14:58:17Z",
+  "download_url": "https://github.com/0x48lab/hackCraft2-public/releases/download/wc-stable-6/WorldCraftAI-1.0-SNAPSHOT.jar",
+  "source_commit_hash": "2d5914fb0d3cb010e2a80e2cb526ce9ecf9bf071",
+  "public_commit_hash": "dcacdd9bf4d29cd9a36860a92971ae6a5a7c2373",
+  "release_tag": "wc-stable-6",
   "jar_filename": "WorldCraftAI-1.0-SNAPSHOT.jar",
   "jar_size": 100808238
 }

@@ -1,0 +1,12 @@
+{
+  "build_number": 176,
+  "version": "develop",
+  "release_date": "2026-08-30T04:15:53Z",
+  "download_url": "https://github.com/0x48lab/hackCraft2-public/releases/download/stable-176/hackcraft2-1.21.x-R115-all.jar",
+  "source_commit_hash": "b58eceda75313837af390b635253a81f144048f1",
+  "public_commit_hash": "4a04e1e907f9fa03c780e91380bec23adbc85550",
+  "paper_version": "-R0.1-SNAPSHOT",
+  "release_tag": "stable-176",
+  "jar_filename": "hackcraft2-1.21.x-R115-all.jar",
+  "jar_size": 185416799
+}
